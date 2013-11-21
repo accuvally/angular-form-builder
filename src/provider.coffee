@@ -35,8 +35,6 @@ a.provider '$builder', ->
     #   form mode: `fb-form` this is the form for end-user to input value.
     @forms =
         default: []
-    @formsId =
-        default: 0
 
 
     # ----------------------------------------
@@ -44,6 +42,23 @@ a.provider '$builder', ->
     # ----------------------------------------
     @setupProviders = (injector) ->
         $injector = injector
+
+    @s4 = ->
+        ###
+        The private method for `guid()`.
+        @return: {string}
+        ###
+        Math.floor((1 + Math.random()) * 0x10000).toString(16).substr 1
+
+    @getNewGuid = ->
+        ###
+        Get the guid string. ex: `cb35a9c2-3890-6a37-797b-7379260fbb0d`
+        @return: {string}
+        ###
+        "#{@s4()}#{@s4()}-#{@s4()}-#{@s4()}-#{@s4()}-#{@s4()}#{@s4()}#{@s4()}"
+
+    @getEmptyGuid = ->
+        '00000000-0000-0000-0000-000000000000'
 
     @convertComponent = (name, component) ->
         result =
@@ -67,15 +82,8 @@ a.provider '$builder', ->
     @convertFormObject = (name, formObject={}) ->
         component = @components[formObject.component]
         console.error "component #{formObject.component} was not registered." if not component?
-        if formObject.id
-            exist = no
-            for form in @forms[name] when formObject.id <= form.id # less and equal
-                formObject.id = @formsId[name]++
-                exist = yes
-                break
-            @formsId[name] = formObject.id + 1 if not exist
         result =
-            id: formObject.id ? @formsId[name]++
+            id: formObject.id ? @getNewGuid()
             component: formObject.component
             editable: formObject.editable ? component.editable
             index: formObject.index ? 0
@@ -130,7 +138,6 @@ a.provider '$builder', ->
         Insert the form object into the form at last.
         ###
         @forms[name] ?= []
-        @formsId[name] ?= 0
         @insertFormObject name, @forms[name].length, formObject
 
     @insertFormObject = (name, index, formObject={}) =>
@@ -148,11 +155,10 @@ a.provider '$builder', ->
             required: {bool} Is the form object required? (default is no)
             validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
             errorMessage: {string} The validation error message.
-            [id]: {int} The form object id. It will be generate by $builder.
+            [id]: {guid} The form object id. It will be generate by $builder.
             [index]: {int} The form object index. It will be updated by $builder.
         ###
         @forms[name] ?= []
-        @formsId[name] ?= 0
         if index > @forms.length then index = @forms.length
         else if index < 0 then index = 0
         @forms[name].splice index, 0, @convertFormObject(name, formObject)
