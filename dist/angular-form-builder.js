@@ -437,7 +437,7 @@
           input = {
             id: formObject.id,
             label: formObject.label,
-            value: value != null ? value : ''
+            value: value != null ? value : []
           };
           return scope.$parent.input.splice(scope.$index, 1, input);
         };
@@ -458,7 +458,8 @@
           return _results;
         };
         scope.$on($builder.broadcastChannel.updateInput, function() {
-          return updateInput(scope.inputText);
+          var _ref;
+          return updateInput([(_ref = scope.inputText) != null ? _ref : '']);
         });
         if (component.arrayToText) {
           scope.inputArray = [];
@@ -473,11 +474,11 @@
                 checked.push(scope.options[index]);
               }
             }
-            return scope.inputText = checked.join(', ');
+            return updateInput(checked);
           }, true);
         }
-        scope.$watch('inputText', function() {
-          return updateInput(scope.inputText);
+        scope.$watch('inputText', function(value) {
+          return updateInput([value]);
         });
         scope.$watch(attrs.fbFormObject, function() {
           return copyValueFormFormObject();

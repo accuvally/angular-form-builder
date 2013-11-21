@@ -392,7 +392,7 @@ fbFormObject = ($injector) ->
             input =
                 id: formObject.id
                 label: formObject.label
-                value: value ? ''
+                value: value ? []
             scope.$parent.input.splice scope.$index, 1, input
 
         copyValueFormFormObject = ->
@@ -407,7 +407,7 @@ fbFormObject = ($injector) ->
         # scope
         # ----------------------------------------
         # listen (formObject updated
-        scope.$on $builder.broadcastChannel.updateInput, -> updateInput scope.inputText
+        scope.$on $builder.broadcastChannel.updateInput, -> updateInput [scope.inputText ? '']
         if component.arrayToText
             scope.inputArray = []
             # watch (end-user updated input of the form
@@ -417,9 +417,9 @@ fbFormObject = ($injector) ->
                 checked = []
                 for index of scope.inputArray when scope.inputArray[index]
                     checked.push scope.options[index]
-                scope.inputText = checked.join ', '
+                updateInput checked
             , yes
-        scope.$watch 'inputText', -> updateInput scope.inputText
+        scope.$watch 'inputText', (value) -> updateInput [value]
         # watch (management updated form objects
         scope.$watch attrs.fbFormObject, ->
             copyValueFormFormObject()
