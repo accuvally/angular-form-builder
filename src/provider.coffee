@@ -15,12 +15,6 @@ a = angular.module 'builder.provider', []
 
 a.provider '$builder', ->
     # ----------------------------------------
-    # providers
-    # ----------------------------------------
-    $injector = null
-
-
-    # ----------------------------------------
     # properties
     # ----------------------------------------
     # all components
@@ -40,9 +34,6 @@ a.provider '$builder', ->
     # ----------------------------------------
     # private functions
     # ----------------------------------------
-    @setupProviders = (injector) ->
-        $injector = injector
-
     @s4 = ->
         ###
         The private method for `guid()`.
@@ -75,13 +66,20 @@ a.provider '$builder', ->
             arrayToText: component.arrayToText ? no
             template: component.template
             popoverTemplate: component.popoverTemplate
-        if not result.template then console.error "template is empty"
-        if not result.popoverTemplate then console.error "popoverTemplate is empty"
+        if not result.template then console.error "The template is empty."
+        if not result.popoverTemplate then console.error "The popoverTemplate is empty."
         result
 
     @convertFormObject = (name, formObject={}) ->
         component = @components[formObject.component]
-        console.error "component #{formObject.component} was not registered." if not component?
+        throw "The component #{formObject.component} was not registered." if not component?
+        if formObject.id
+            exist = no
+            for form in @forms[name] when formObject.id <= form.id # less and equal
+                formObject.id = @formsId[name]++
+                exist = yes
+                break
+            @formsId[name] = formObject.id + 1 if not exist
         result =
             id: formObject.id ? @getNewGuid()
             component: formObject.component
@@ -137,7 +135,6 @@ a.provider '$builder', ->
         ###
         Insert the form object into the form at last.
         ###
-        @forms[name] ?= []
         @insertFormObject name, @forms[name].length, formObject
 
     @insertFormObject = (name, index, formObject={}) =>
@@ -190,9 +187,7 @@ a.provider '$builder', ->
     # ----------------------------------------
     # $get
     # ----------------------------------------
-    @get = ($injector) ->
-        @setupProviders $injector
-
+    @get = ->
         components: @components
         groups: @groups
         forms: @forms
@@ -202,6 +197,5 @@ a.provider '$builder', ->
         insertFormObject: @insertFormObject
         removeFormObject: @removeFormObject
         updateFormObjectIndex: @updateFormObjectIndex
-    @get.$inject = ['$injector']
     @$get = @get
     return
