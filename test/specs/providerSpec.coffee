@@ -68,13 +68,6 @@ describe 'builder.provider', ->
             .toEqual $builder.forms
 
 
-    describe '$builderProvider.formsId', ->
-        it 'check $builderProvider.formsId', ->
-            expect
-                default: 0
-            .toEqual builderProvider.formsId
-
-
     describe '$builderProvider.convertComponent', ->
         it 'check $builderProvider.convertComponent() argument without template', ->
             spyOn(console, 'error').andCallFake (msg) ->
