@@ -1,4 +1,4 @@
-#angular-form-builder [![Build Status](https://secure.travis-ci.org/kelp404/angular-form-builder.png?branch=master)](http://travis-ci.org/kelp404/angular-form-builder) [![devDependency Status](https://david-dm.org/kelp404/angular-form-builder/dev-status.png?branch=master)](https://david-dm.org/kelp404/angular-form-builder#info=devDependencies&view=table)
+#angular-form-builder [![Build Status](https://secure.travis-ci.org/accuvally/angular-form-builder.png?branch=master)](http://travis-ci.org/accuvally/angular-form-builder) [![devDependency Status](https://david-dm.org/accuvally/angular-form-builder/dev-status.png?branch=master)](https://david-dm.org/accuvally/angular-form-builder#info=devDependencies&view=table)
 
 [MIT License](http://www.opensource.org/licenses/mit-license.php)
 
