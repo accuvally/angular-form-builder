@@ -61,6 +61,7 @@ a.provider '$builder', ->
             editable: component.editable ? yes
             required: component.required ? no
             validation: component.validation ? '/.*/'
+            validationOptions: component.validationOptions ? []
             errorMessage: component.errorMessage ? ''
             options: component.options ? []
             arrayToText: component.arrayToText ? no
@@ -94,7 +95,7 @@ a.provider '$builder', ->
             errorMessage: formObject.errorMessage ? component.errorMessage
         result
 
-    @reIndexFormObject = (name) =>
+    @reindexFormObject = (name) =>
         formObjects = @forms[name]
         for index in [0..formObjects.length - 1] by 1
             formObjects[index].index = index
@@ -115,6 +116,7 @@ a.provider '$builder', ->
             editable: {bool} Is the form object editable?
             required: {bool} Is the form object required?
             validation: {string} angular-validator. "/regex/" or "[rule1, rule2]". (default is RegExp(.*))
+            validationOptions: {array} [{rule: angular-validator, label: 'option label'}] the options for the validation. (default is [])
             errorMessage: {string} The validator error message
             options: {array} The input options.
             arrayToText: {bool} checkbox could use this to convert input (default is no)
@@ -156,10 +158,10 @@ a.provider '$builder', ->
             [index]: {int} The form object index. It will be updated by $builder.
         ###
         @forms[name] ?= []
-        if index > @forms.length then index = @forms.length
+        if index > @forms[name].length then index = @forms[name].length
         else if index < 0 then index = 0
         @forms[name].splice index, 0, @convertFormObject(name, formObject)
-        @reIndexFormObject name
+        @reindexFormObject name
 
     @removeFormObject = (name, index) =>
         ###
@@ -169,7 +171,7 @@ a.provider '$builder', ->
         ###
         formObjects = @forms[name]
         formObjects.splice index, 1
-        @reIndexFormObject name
+        @reindexFormObject name
 
     @updateFormObjectIndex = (name, oldIndex, newIndex) =>
         ###
@@ -182,7 +184,7 @@ a.provider '$builder', ->
         formObjects = @forms[name]
         formObject = formObjects.splice(oldIndex, 1)[0]
         formObjects.splice newIndex, 0, formObject
-        @reIndexFormObject name
+        @reindexFormObject name
 
     # ----------------------------------------
     # $get
