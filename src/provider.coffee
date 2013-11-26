@@ -74,13 +74,6 @@ a.provider '$builder', ->
     @convertFormObject = (name, formObject={}) ->
         component = @components[formObject.component]
         throw "The component #{formObject.component} was not registered." if not component?
-        if formObject.id
-            exist = no
-            for form in @forms[name] when formObject.id <= form.id # less and equal
-                formObject.id = @formsId[name]++
-                exist = yes
-                break
-            @formsId[name] = formObject.id + 1 if not exist
         result =
             id: formObject.id ? @getNewGuid()
             component: formObject.component
@@ -137,6 +130,7 @@ a.provider '$builder', ->
         ###
         Insert the form object into the form at last.
         ###
+        @forms[name] ?= []
         @insertFormObject name, @forms[name].length, formObject
 
     @insertFormObject = (name, index, formObject={}) =>
