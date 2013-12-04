@@ -189,7 +189,8 @@
 }).call(this);
 
 (function() {
-  var a, fbBuilder, fbComponent, fbComponents, fbForm, fbFormObject, fbFormObjectEditable;
+  var a, fbBuilder, fbComponent, fbComponents, fbForm, fbFormObject, fbFormObjectEditable,
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   a = angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']);
 
@@ -530,6 +531,19 @@
         scope.$watch('inputText', function(value) {
           return scope.updateInput([value]);
         });
+        scope.$parent.$watch("input[" + scope.$index + "].value", function(value) {
+          var index, _i, _ref, _ref1, _results;
+          if (value) {
+            if (value.length === 1 && value[0]) {
+              scope.inputText = value[0];
+            }
+            _results = [];
+            for (index = _i = 0, _ref = scope.options.length; _i < _ref; index = _i += 1) {
+              _results.push(scope.inputArray[index] = (_ref1 = scope.options[index], __indexOf.call(value, _ref1) >= 0));
+            }
+            return _results;
+          }
+        }, true);
         scope.$watch(attrs.fbFormObject, function() {
           return scope.copyObjectToScope(scope.formObject);
         }, true);
