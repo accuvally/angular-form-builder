@@ -61,7 +61,12 @@ fbBuilder = ($injector) ->
                 positions.push positions[positions.length - 1] + 1000   # last
 
                 # search where should I insert the .empty
-                for index in [1..positions.length - 1] by 1
+                uneditableIndex = -1
+                for index in [(scope.formObjects.length - 1)..0] by -1 when not scope.formObjects[index].editable
+                    uneditableIndex = index
+                    break
+                positionStart = if uneditableIndex >= 0 then uneditableIndex + 2 else 1
+                for index in [positionStart...positions.length] by 1
                     if e.pageY > positions[index - 1] and e.pageY <= positions[index]
                         # you known, this one
                         $(element).find('.empty').remove()
@@ -135,12 +140,13 @@ fbFormObjectEditable = ($injector) ->
         $(element).on 'click', -> no
 
         # draggable
-        $drag.draggable $(element),
-            object:
-                formObject: formObject
-
-        # do not setup bootstrap popover
-        return if not formObject.editable
+        if formObject.editable
+            $drag.draggable $(element),
+                object:
+                    formObject: formObject
+        else
+            # do not setup bootstrap popover
+            return
 
         # ----------------------------------------
         # bootstrap popover
