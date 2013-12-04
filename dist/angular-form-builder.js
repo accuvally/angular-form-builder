@@ -143,6 +143,9 @@
     var $builder, $timeout;
     $builder = $injector.get('$builder');
     $timeout = $injector.get('$timeout');
+    if ($scope.input == null) {
+      $scope.input = [];
+    }
     return $scope.$watch('form', function() {
       if ($scope.input.length > $scope.form.length) {
         $scope.input.splice($scope.form.length);
@@ -474,8 +477,7 @@
       link: function(scope, element, attrs) {
         var $builder;
         $builder = $injector.get('$builder');
-        scope.formName = attrs.fbForm;
-        return scope.form = $builder.forms[scope.formName];
+        return scope.form = $builder.forms[attrs.fbForm];
       }
     };
   };
@@ -959,6 +961,7 @@
 
   a.provider('$builder', function() {
     var _this = this;
+    this.version = '0.0.0';
     this.components = {};
     this.groups = [];
     this.broadcastChannel = {
@@ -1156,6 +1159,7 @@
     };
     this.get = function() {
       return {
+        version: this.version,
         components: this.components,
         groups: this.groups,
         forms: this.forms,
