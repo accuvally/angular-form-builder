@@ -262,7 +262,7 @@
             return $(element).find('.empty').remove();
           },
           up: function(e, isHover, draggable) {
-            var formObject, newIndex, oldIndex;
+            var formObject, index, newIndex, oldIndex;
             beginMove = true;
             if (!$drag.isMouseMoved()) {
               $(element).find('.empty').remove();
@@ -275,9 +275,12 @@
               }
             } else if (isHover) {
               if (draggable.mode === 'mirror') {
-                $builder.insertFormObject(scope.formName, $(element).find('.empty').index('.fb-form-object-editable'), {
-                  component: draggable.object.componentName
-                });
+                index = $(element).find('.empty').index('.fb-form-object-editable');
+                if (index >= 0) {
+                  $builder.insertFormObject(scope.formName, $(element).find('.empty').index('.fb-form-object-editable'), {
+                    component: draggable.object.componentName
+                  });
+                }
               }
               if (draggable.mode === 'drag') {
                 oldIndex = draggable.object.formObject.index;
@@ -533,14 +536,15 @@
           return scope.updateInput([value]);
         });
         scope.$parent.$watch("input[" + scope.$index + "].value", function(value) {
-          var index, _i, _ref, _ref1, _results;
+          var index, optionsLength, _i, _ref, _results;
           if (value) {
             if (value.length === 1 && value[0]) {
               scope.inputText = value[0];
             }
+            optionsLength = scope.options ? scope.options.length : 0;
             _results = [];
-            for (index = _i = 0, _ref = scope.options.length; _i < _ref; index = _i += 1) {
-              _results.push(scope.inputArray[index] = (_ref1 = scope.options[index], __indexOf.call(value, _ref1) >= 0));
+            for (index = _i = 0; _i < optionsLength; index = _i += 1) {
+              _results.push(scope.inputArray[index] = (_ref = scope.options[index], __indexOf.call(value, _ref) >= 0));
             }
             return _results;
           }

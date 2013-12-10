@@ -99,8 +99,10 @@ fbBuilder = ($injector) ->
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object
-                        $builder.insertFormObject scope.formName, $(element).find('.empty').index('.fb-form-object-editable'),
-                            component: draggable.object.componentName
+                        index = $(element).find('.empty').index('.fb-form-object-editable')
+                        if index >= 0
+                            $builder.insertFormObject scope.formName, $(element).find('.empty').index('.fb-form-object-editable'),
+                                component: draggable.object.componentName
                     if draggable.mode is 'drag'
                         # update the index of form objects
                         oldIndex = draggable.object.formObject.index
@@ -367,7 +369,8 @@ fbFormObject = ($injector) ->
         scope.$parent.$watch "input[#{scope.$index}].value", (value) ->
             if value
                 scope.inputText = value[0] if value.length is 1 and value[0]
-                for index in [0...scope.options.length] by 1
+                optionsLength = if scope.options then scope.options.length else 0
+                for index in [0...optionsLength] by 1
                     scope.inputArray[index] = scope.options[index] in value
         , yes
         # watch (management updated form objects
