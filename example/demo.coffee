@@ -3,6 +3,7 @@ a = angular.module 'app', ['builder', 'builder.components', 'validator.rules']
 
 a.controller 'BuilderController', ($scope, $builder) ->
     $builder.addFormObject 'default',
+        id: '000'
         component: 'textInput'
         label: 'Name'
         description: 'Your name'

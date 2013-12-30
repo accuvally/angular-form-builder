@@ -1007,17 +1007,6 @@
 
       return Math.floor((1 + Math.random()) * 0x10000).toString(16).substr(1);
     };
-    this.getNewGuid = function() {
-      /*
-      Get the guid string. ex: `cb35a9c2-3890-6a37-797b-7379260fbb0d`
-      @return: {string}
-      */
-
-      return "" + (this.s4()) + (this.s4()) + "-" + (this.s4()) + "-" + (this.s4()) + "-" + (this.s4()) + "-" + (this.s4()) + (this.s4()) + (this.s4());
-    };
-    this.getEmptyGuid = function() {
-      return '00000000-0000-0000-0000-000000000000';
-    };
     this.convertComponent = function(name, component) {
       var result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
@@ -1054,7 +1043,7 @@
         throw "The component " + formObject.component + " was not registered.";
       }
       result = {
-        id: (_ref = formObject.id) != null ? _ref : this.getNewGuid(),
+        id: (_ref = formObject.id) != null ? _ref : null,
         component: formObject.component,
         editable: (_ref1 = formObject.editable) != null ? _ref1 : component.editable,
         index: (_ref2 = formObject.index) != null ? _ref2 : 0,

@@ -5,6 +5,7 @@
 
   a.controller('BuilderController', function($scope, $builder) {
     $builder.addFormObject('default', {
+      id: '000',
       component: 'textInput',
       label: 'Name',
       description: 'Your name',

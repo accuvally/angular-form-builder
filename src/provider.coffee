@@ -42,16 +42,6 @@ a.provider '$builder', ->
         ###
         Math.floor((1 + Math.random()) * 0x10000).toString(16).substr 1
 
-    @getNewGuid = ->
-        ###
-        Get the guid string. ex: `cb35a9c2-3890-6a37-797b-7379260fbb0d`
-        @return: {string}
-        ###
-        "#{@s4()}#{@s4()}-#{@s4()}-#{@s4()}-#{@s4()}-#{@s4()}#{@s4()}#{@s4()}"
-
-    @getEmptyGuid = ->
-        '00000000-0000-0000-0000-000000000000'
-
     @convertComponent = (name, component) ->
         result =
             name: name
@@ -76,7 +66,7 @@ a.provider '$builder', ->
         component = @components[formObject.component]
         throw "The component #{formObject.component} was not registered." if not component?
         result =
-            id: formObject.id ? @getNewGuid()
+            id: formObject.id ? null
             component: formObject.component
             editable: formObject.editable ? component.editable
             index: formObject.index ? 0
