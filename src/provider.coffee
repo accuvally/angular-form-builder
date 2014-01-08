@@ -35,12 +35,17 @@ a.provider '$builder', ->
     # ----------------------------------------
     # private functions
     # ----------------------------------------
-    @s4 = ->
-        ###
-        The private method for `guid()`.
-        @return: {string}
-        ###
-        Math.floor((1 + Math.random()) * 0x10000).toString(16).substr 1
+    @bleach =
+        toUpperCase: (source) ->
+            result = {}
+            for key, value of source
+                result[key.replace(/^\w?/, key.substr(0, 1).toUpperCase())] = value
+            result
+        toLowerCase: (source) ->
+            result = {}
+            for key, value of source
+                result[key.replace(/^\w?/, key.substr(0, 1).toLowerCase())] = value
+            result
 
     @convertComponent = (name, component) ->
         result =
@@ -63,6 +68,11 @@ a.provider '$builder', ->
         result
 
     @convertFormObject = (name, formObject={}) ->
+        # clear dirty data
+        formObject = @bleach.toLowerCase formObject
+        formObject.id = formObject.id ? formObject.idNumber
+        formObject.index = formObject.index ? formObject.orderBy
+
         component = @components[formObject.component]
         throw "The component #{formObject.component} was not registered." if not component?
         result =
@@ -83,6 +93,7 @@ a.provider '$builder', ->
         formObjects = @forms[name]
         for index in [0...formObjects.length] by 1
             formObjects[index].index = index
+            formObjects[index].OrderBy = index
         return
 
     # ----------------------------------------
@@ -130,17 +141,17 @@ a.provider '$builder', ->
         @param name: The form name.
         @param index: The form object index.
         @param form: The form object.
-            component: {string} The component name
-            editable: {bool} Is the form object editable? (default is yes)
-            label: {string} The form object label.
-            description: {string} The form object description.
-            placeholder: {string} The form object placeholder.
-            options: {array} The form object options.
-            required: {bool} Is the form object required? (default is no)
-            validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
-            errorMessage: {string} The validation error message.
-            [id]: {guid} The form object id. It will be generate by $builder.
-            [index]: {int} The form object index. It will be updated by $builder.
+            Component: {string} The component name
+            Editable: {bool} Is the form object editable? (default is yes)
+            Label: {string} The form object label.
+            Description: {string} The form object description.
+            Olaceholder: {string} The form object placeholder.
+            Options: {array} The form object options.
+            Required: {bool} Is the form object required? (default is no)
+            Validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
+            ErrorMessage: {string} The validation error message.
+            [IdNumber]: {guid} The form object id. It will be generate by $builder.
+            [OrderBy]: {int} The form object index. It will be updated by $builder.
         ###
         @forms[name] ?= []
         if index > @forms[name].length then index = @forms[name].length

@@ -269,24 +269,24 @@ describe 'builder.controller', ->
                 $scope.$parent.input = []
                 $scope.$index = 0
                 $scope.formObject =
-                    id: ''
+                    id: null
                     label: 'label'
                 $scope.updateInput 'value'
                 expect($scope.$parent.input).toEqual [
-                    id: ''
-                    label: 'label'
-                    value: 'value'
+                    IdNumber: null
+                    Label: 'label'
+                    Value: 'value'
                 ]
 
             it '$scope.updateInput(value) will copy input value to $parent.input with default', ->
                 $scope.$parent.input = []
                 $scope.$index = 0
                 $scope.formObject =
-                    id: ''
+                    id: null
                     label: 'label'
                 $scope.updateInput()
                 expect($scope.$parent.input).toEqual [
-                    id: ''
-                    label: 'label'
-                    value: []
+                    IdNumber: null
+                    Label: 'label'
+                    Value: []
                 ]

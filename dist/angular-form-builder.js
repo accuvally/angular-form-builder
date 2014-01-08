@@ -34,12 +34,19 @@
       $scope.optionsText = formObject.options.join('\n');
       $scope.$watch('[label, description, placeholder, required, options, validation]', function() {
         formObject.label = $scope.label;
+        formObject.Label = $scope.label;
         formObject.description = $scope.description;
+        formObject.Description = $scope.description;
         formObject.placeholder = $scope.placeholder;
+        formObject.Placeholder = $scope.placeholder;
         formObject.required = $scope.required;
+        formObject.Required = $scope.required;
         formObject.options = $scope.options;
-        return formObject.validation = $scope.validation;
+        formObject.Options = $scope.options;
+        formObject.validation = $scope.validation;
+        return formObject.Validation = $scope.validation;
       }, true);
+      formObject.IdNumber = formObject.id;
       $scope.$watch('optionsText', function(text) {
         var x;
         $scope.options = (function() {
@@ -174,9 +181,9 @@
 
       var input;
       input = {
-        id: $scope.formObject.id,
-        label: $scope.formObject.label,
-        value: value != null ? value : []
+        IdNumber: $scope.formObject.id,
+        Label: $scope.formObject.label,
+        Value: value != null ? value : []
       };
       return $scope.$parent.input.splice($scope.$index, 1, input);
     };
@@ -535,7 +542,7 @@
         scope.$watch('inputText', function(value) {
           return scope.updateInput([value]);
         });
-        scope.$parent.$watch("input[" + scope.$index + "].value", function(value) {
+        scope.$parent.$watch("input[" + scope.$index + "].Value", function(value) {
           var index, optionsLength, _i, _ref, _results;
           if (value) {
             if (value.length === 1 && value[0]) {
@@ -999,13 +1006,25 @@
     this.forms = {
       "default": []
     };
-    this.s4 = function() {
-      /*
-      The private method for `guid()`.
-      @return: {string}
-      */
-
-      return Math.floor((1 + Math.random()) * 0x10000).toString(16).substr(1);
+    this.bleach = {
+      toUpperCase: function(source) {
+        var key, result, value;
+        result = {};
+        for (key in source) {
+          value = source[key];
+          result[key.replace(/^\w?/, key.substr(0, 1).toUpperCase())] = value;
+        }
+        return result;
+      },
+      toLowerCase: function(source) {
+        var key, result, value;
+        result = {};
+        for (key in source) {
+          value = source[key];
+          result[key.replace(/^\w?/, key.substr(0, 1).toLowerCase())] = value;
+        }
+        return result;
+      }
     };
     this.convertComponent = function(name, component) {
       var result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
@@ -1034,26 +1053,29 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var component, result, _ref, _ref1, _ref10, _ref11, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (formObject == null) {
         formObject = {};
       }
+      formObject = this.bleach.toLowerCase(formObject);
+      formObject.id = (_ref = formObject.id) != null ? _ref : formObject.idNumber;
+      formObject.index = (_ref1 = formObject.index) != null ? _ref1 : formObject.orderBy;
       component = this.components[formObject.component];
       if (component == null) {
         throw "The component " + formObject.component + " was not registered.";
       }
       result = {
-        id: (_ref = formObject.id) != null ? _ref : null,
+        id: (_ref2 = formObject.id) != null ? _ref2 : null,
         component: formObject.component,
-        editable: (_ref1 = formObject.editable) != null ? _ref1 : component.editable,
-        index: (_ref2 = formObject.index) != null ? _ref2 : 0,
-        label: (_ref3 = formObject.label) != null ? _ref3 : component.label,
-        description: (_ref4 = formObject.description) != null ? _ref4 : component.description,
-        placeholder: (_ref5 = formObject.placeholder) != null ? _ref5 : component.placeholder,
-        options: (_ref6 = formObject.options) != null ? _ref6 : component.options,
-        required: (_ref7 = formObject.required) != null ? _ref7 : component.required,
-        validation: (_ref8 = formObject.validation) != null ? _ref8 : component.validation,
-        errorMessage: (_ref9 = formObject.errorMessage) != null ? _ref9 : component.errorMessage
+        editable: (_ref3 = formObject.editable) != null ? _ref3 : component.editable,
+        index: (_ref4 = formObject.index) != null ? _ref4 : 0,
+        label: (_ref5 = formObject.label) != null ? _ref5 : component.label,
+        description: (_ref6 = formObject.description) != null ? _ref6 : component.description,
+        placeholder: (_ref7 = formObject.placeholder) != null ? _ref7 : component.placeholder,
+        options: (_ref8 = formObject.options) != null ? _ref8 : component.options,
+        required: (_ref9 = formObject.required) != null ? _ref9 : component.required,
+        validation: (_ref10 = formObject.validation) != null ? _ref10 : component.validation,
+        errorMessage: (_ref11 = formObject.errorMessage) != null ? _ref11 : component.errorMessage
       };
       return result;
     };
@@ -1062,6 +1084,7 @@
       formObjects = _this.forms[name];
       for (index = _i = 0, _ref = formObjects.length; _i < _ref; index = _i += 1) {
         formObjects[index].index = index;
+        formObjects[index].OrderBy = index;
       }
     };
     this.registerComponent = function(name, component) {
@@ -1122,17 +1145,17 @@
       @param name: The form name.
       @param index: The form object index.
       @param form: The form object.
-          component: {string} The component name
-          editable: {bool} Is the form object editable? (default is yes)
-          label: {string} The form object label.
-          description: {string} The form object description.
-          placeholder: {string} The form object placeholder.
-          options: {array} The form object options.
-          required: {bool} Is the form object required? (default is no)
-          validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
-          errorMessage: {string} The validation error message.
-          [id]: {guid} The form object id. It will be generate by $builder.
-          [index]: {int} The form object index. It will be updated by $builder.
+          Component: {string} The component name
+          Editable: {bool} Is the form object editable? (default is yes)
+          Label: {string} The form object label.
+          Description: {string} The form object description.
+          Olaceholder: {string} The form object placeholder.
+          Options: {array} The form object options.
+          Required: {bool} Is the form object required? (default is no)
+          Validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
+          ErrorMessage: {string} The validation error message.
+          [IdNumber]: {guid} The form object id. It will be generate by $builder.
+          [OrderBy]: {int} The form object index. It will be updated by $builder.
       */
 
       if ((_base = _this.forms)[name] == null) {

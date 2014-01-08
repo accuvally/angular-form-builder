@@ -366,7 +366,7 @@ fbFormObject = ($injector) ->
                 scope.updateInput checked
             , yes
         scope.$watch 'inputText', (value) -> scope.updateInput [value]
-        scope.$parent.$watch "input[#{scope.$index}].value", (value) ->
+        scope.$parent.$watch "input[#{scope.$index}].Value", (value) ->
             if value
                 scope.inputText = value[0] if value.length is 1 and value[0]
                 optionsLength = if scope.options then scope.options.length else 0

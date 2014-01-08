@@ -31,12 +31,20 @@ fbFormObjectEditableController = ($scope, $injector) ->
 
         $scope.$watch '[label, description, placeholder, required, options, validation]', ->
             formObject.label = $scope.label
+            formObject.Label = $scope.label
             formObject.description = $scope.description
+            formObject.Description = $scope.description
             formObject.placeholder = $scope.placeholder
+            formObject.Placeholder = $scope.placeholder
             formObject.required = $scope.required
+            formObject.Required = $scope.required
             formObject.options = $scope.options
+            formObject.Options = $scope.options
             formObject.validation = $scope.validation
+            formObject.Validation = $scope.validation
         , yes
+
+        formObject.IdNumber = formObject.id
 
         $scope.$watch 'optionsText', (text) ->
             $scope.options = (x for x in text.split('\n') when x.length > 0)
@@ -145,9 +153,9 @@ fbFormObjectController = ($scope, $injector) ->
         @param value: The input value.
         ###
         input =
-            id: $scope.formObject.id
-            label: $scope.formObject.label
-            value: value ? []
+            IdNumber: $scope.formObject.id
+            Label: $scope.formObject.label
+            Value: value ? []
         $scope.$parent.input.splice $scope.$index, 1, input
 
 fbFormObjectController.$inject = ['$scope', '$injector']
