@@ -77,7 +77,9 @@ a.provider '$builder', ->
         result =
             id: formObject.id ? null
             component: formObject.component
+            Component: formObject.component
             editable: formObject.editable ? component.editable
+            Editable: formObject.editable ? component.editable
             index: formObject.index ? 0
             label: formObject.label ? component.label
             description: formObject.description ? component.description

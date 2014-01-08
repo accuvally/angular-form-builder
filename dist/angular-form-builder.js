@@ -1051,7 +1051,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var component, result, _ref, _ref1, _ref10, _ref11, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (formObject == null) {
         formObject = {};
       }
@@ -1065,14 +1065,16 @@
       result = {
         id: (_ref2 = formObject.id) != null ? _ref2 : null,
         component: formObject.component,
+        Component: formObject.component,
         editable: (_ref3 = formObject.editable) != null ? _ref3 : component.editable,
-        index: (_ref4 = formObject.index) != null ? _ref4 : 0,
-        label: (_ref5 = formObject.label) != null ? _ref5 : component.label,
-        description: (_ref6 = formObject.description) != null ? _ref6 : component.description,
-        placeholder: (_ref7 = formObject.placeholder) != null ? _ref7 : component.placeholder,
-        options: (_ref8 = formObject.options) != null ? _ref8 : component.options,
-        required: (_ref9 = formObject.required) != null ? _ref9 : component.required,
-        validation: (_ref10 = formObject.validation) != null ? _ref10 : component.validation
+        Editable: (_ref4 = formObject.editable) != null ? _ref4 : component.editable,
+        index: (_ref5 = formObject.index) != null ? _ref5 : 0,
+        label: (_ref6 = formObject.label) != null ? _ref6 : component.label,
+        description: (_ref7 = formObject.description) != null ? _ref7 : component.description,
+        placeholder: (_ref8 = formObject.placeholder) != null ? _ref8 : component.placeholder,
+        options: (_ref9 = formObject.options) != null ? _ref9 : component.options,
+        required: (_ref10 = formObject.required) != null ? _ref10 : component.required,
+        validation: (_ref11 = formObject.validation) != null ? _ref11 : component.validation
       };
       return result;
     };
