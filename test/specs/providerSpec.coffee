@@ -164,7 +164,9 @@ describe 'builder.provider', ->
             expect
                 id: formObject.id
                 component: 'inputText'
+                Component: 'inputText'
                 editable: yes
+                Editable: yes
                 index: 0
                 label: 'Input Text'
                 description: 'description'
@@ -192,7 +194,9 @@ describe 'builder.provider', ->
             expect
                 id: formObject.id
                 component: 'inputText'
+                Component: 'inputText'
                 editable: no
+                Editable: no
                 index: 0
                 label: 'input label'
                 description: 'description A'
