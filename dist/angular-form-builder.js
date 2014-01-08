@@ -562,8 +562,7 @@
         $template = $(component.template);
         $input = $template.find("[ng-model='inputText']");
         $input.attr({
-          validator: '{{validation}}',
-          'validator-error': '{{errorMessage}}'
+          validator: '{{validation}}'
         });
         view = $compile($template)(scope);
         $(element).append(view);
@@ -1027,7 +1026,7 @@
       }
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
@@ -1038,9 +1037,8 @@
         required: (_ref5 = component.required) != null ? _ref5 : false,
         validation: (_ref6 = component.validation) != null ? _ref6 : '/.*/',
         validationOptions: (_ref7 = component.validationOptions) != null ? _ref7 : [],
-        errorMessage: (_ref8 = component.errorMessage) != null ? _ref8 : '',
-        options: (_ref9 = component.options) != null ? _ref9 : [],
-        arrayToText: (_ref10 = component.arrayToText) != null ? _ref10 : false,
+        options: (_ref8 = component.options) != null ? _ref8 : [],
+        arrayToText: (_ref9 = component.arrayToText) != null ? _ref9 : false,
         template: component.template,
         popoverTemplate: component.popoverTemplate
       };
@@ -1053,7 +1051,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref10, _ref11, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var component, result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (formObject == null) {
         formObject = {};
       }
@@ -1074,8 +1072,7 @@
         placeholder: (_ref7 = formObject.placeholder) != null ? _ref7 : component.placeholder,
         options: (_ref8 = formObject.options) != null ? _ref8 : component.options,
         required: (_ref9 = formObject.required) != null ? _ref9 : component.required,
-        validation: (_ref10 = formObject.validation) != null ? _ref10 : component.validation,
-        errorMessage: (_ref11 = formObject.errorMessage) != null ? _ref11 : component.errorMessage
+        validation: (_ref10 = formObject.validation) != null ? _ref10 : component.validation
       };
       return result;
     };
@@ -1104,7 +1101,6 @@
           required: {bool} Is the form object required?
           validation: {string} angular-validator. "/regex/" or "[rule1, rule2]". (default is RegExp(.*))
           validationOptions: {array} [{rule: angular-validator, label: 'option label'}] the options for the validation. (default is [])
-          errorMessage: {string} The validator error message
           options: {array} The input options.
           arrayToText: {bool} checkbox could use this to convert input (default is no)
           template: {string} html template
@@ -1153,7 +1149,6 @@
           Options: {array} The form object options.
           Required: {bool} Is the form object required? (default is no)
           Validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
-          ErrorMessage: {string} The validation error message.
           [IdNumber]: {guid} The form object id. It will be generate by $builder.
           [OrderBy]: {int} The form object index. It will be updated by $builder.
       */

@@ -100,7 +100,6 @@ describe 'builder.provider', ->
                 required: no
                 validation: '/.*/'
                 validationOptions: []
-                errorMessage: ''
                 options: []
                 arrayToText: no
                 template: "<div class='form-group'></div>"
@@ -117,7 +116,6 @@ describe 'builder.provider', ->
                 required: yes
                 validation: '/regexp/'
                 validationOptions: []
-                errorMessage: 'error message'
                 options: ['value one']
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
@@ -132,7 +130,6 @@ describe 'builder.provider', ->
                 required: yes
                 validation: '/regexp/'
                 validationOptions: []
-                errorMessage: 'error message'
                 options: ['value one']
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
@@ -157,7 +154,6 @@ describe 'builder.provider', ->
                 editable: yes
                 required: yes
                 validation: '/regexp/'
-                errorMessage: 'error message'
                 options: ['value one']
                 arrayToText: yes
                 template: "<div class='form-group'></div>"
@@ -176,7 +172,6 @@ describe 'builder.provider', ->
                 options: ['value one']
                 required: yes
                 validation: '/regexp/'
-                errorMessage: 'error message'
             .toEqual formObject
 
         it '$builderProvider.convertFormObject()', inject ($builder) ->
@@ -193,7 +188,6 @@ describe 'builder.provider', ->
                 options: ['value']
                 required: no
                 validation: '/.*/'
-                errorMessage: 'error'
 
             expect
                 id: formObject.id
@@ -206,7 +200,6 @@ describe 'builder.provider', ->
                 options: ['value']
                 required: no
                 validation: '/.*/'
-                errorMessage: 'error'
             .toEqual formObject
 
 
@@ -234,7 +227,6 @@ describe 'builder.provider', ->
                 editable: yes
                 required: no
                 validation: '/.*/'
-                errorMessage: ''
                 options: []
                 arrayToText: no
                 template: "<div class='form-group'></div>"
@@ -250,7 +242,6 @@ describe 'builder.provider', ->
                 required: no
                 validation: '/.*/'
                 validationOptions: []
-                errorMessage: ''
                 options: []
                 arrayToText: no
                 template: "<div class='form-group'></div>"

@@ -58,7 +58,6 @@ a.provider '$builder', ->
             required: component.required ? no
             validation: component.validation ? '/.*/'
             validationOptions: component.validationOptions ? []
-            errorMessage: component.errorMessage ? ''
             options: component.options ? []
             arrayToText: component.arrayToText ? no
             template: component.template
@@ -86,7 +85,6 @@ a.provider '$builder', ->
             options: formObject.options ? component.options
             required: formObject.required ? component.required
             validation: formObject.validation ? component.validation
-            errorMessage: formObject.errorMessage ? component.errorMessage
         result
 
     @reindexFormObject = (name) =>
@@ -112,7 +110,6 @@ a.provider '$builder', ->
             required: {bool} Is the form object required?
             validation: {string} angular-validator. "/regex/" or "[rule1, rule2]". (default is RegExp(.*))
             validationOptions: {array} [{rule: angular-validator, label: 'option label'}] the options for the validation. (default is [])
-            errorMessage: {string} The validator error message
             options: {array} The input options.
             arrayToText: {bool} checkbox could use this to convert input (default is no)
             template: {string} html template
@@ -149,7 +146,6 @@ a.provider '$builder', ->
             Options: {array} The form object options.
             Required: {bool} Is the form object required? (default is no)
             Validation: {string} angular-validator. "/regex/" or "[rule1, rule2]".
-            ErrorMessage: {string} The validation error message.
             [IdNumber]: {guid} The form object id. It will be generate by $builder.
             [OrderBy]: {int} The form object index. It will be updated by $builder.
         ###
