@@ -365,14 +365,14 @@ fbFormObject = ($injector) ->
                     checked.push scope.options[index]
                 scope.updateInput checked
             , yes
+            scope.$parent.$watch "input[#{scope.$index}].Value", (value) ->
+                if value
+                    scope.inputText = value[0] if value.length is 1 and value[0]
+                    optionsLength = if scope.options then scope.options.length else 0
+                    for index in [0...optionsLength] by 1
+                        scope.inputArray[index] = scope.options[index] in value
+            , yes
         scope.$watch 'inputText', (value) -> scope.updateInput [value]
-        scope.$parent.$watch "input[#{scope.$index}].Value", (value) ->
-            if value
-                scope.inputText = value[0] if value.length is 1 and value[0]
-                optionsLength = if scope.options then scope.options.length else 0
-                for index in [0...optionsLength] by 1
-                    scope.inputArray[index] = scope.options[index] in value
-        , yes
         # watch (management updated form objects
         scope.$watch attrs.fbFormObject, ->
             scope.copyObjectToScope scope.formObject

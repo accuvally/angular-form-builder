@@ -538,24 +538,24 @@
             }
             return scope.updateInput(checked);
           }, true);
+          scope.$parent.$watch("input[" + scope.$index + "].Value", function(value) {
+            var index, optionsLength, _i, _ref, _results;
+            if (value) {
+              if (value.length === 1 && value[0]) {
+                scope.inputText = value[0];
+              }
+              optionsLength = scope.options ? scope.options.length : 0;
+              _results = [];
+              for (index = _i = 0; _i < optionsLength; index = _i += 1) {
+                _results.push(scope.inputArray[index] = (_ref = scope.options[index], __indexOf.call(value, _ref) >= 0));
+              }
+              return _results;
+            }
+          }, true);
         }
         scope.$watch('inputText', function(value) {
           return scope.updateInput([value]);
         });
-        scope.$parent.$watch("input[" + scope.$index + "].Value", function(value) {
-          var index, optionsLength, _i, _ref, _results;
-          if (value) {
-            if (value.length === 1 && value[0]) {
-              scope.inputText = value[0];
-            }
-            optionsLength = scope.options ? scope.options.length : 0;
-            _results = [];
-            for (index = _i = 0; _i < optionsLength; index = _i += 1) {
-              _results.push(scope.inputArray[index] = (_ref = scope.options[index], __indexOf.call(value, _ref) >= 0));
-            }
-            return _results;
-          }
-        }, true);
         scope.$watch(attrs.fbFormObject, function() {
           return scope.copyObjectToScope(scope.formObject);
         }, true);
