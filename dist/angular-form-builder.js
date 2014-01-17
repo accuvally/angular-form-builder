@@ -552,6 +552,15 @@
               return _results;
             }
           }, true);
+        } else {
+          scope.$parent.$watch("input[" + scope.$index + "].Value", function(newValue, oldValue) {
+            if (newValue === oldValue) {
+              return;
+            }
+            if (newValue[0]) {
+              return scope.inputText = newValue[0];
+            }
+          }, true);
         }
         scope.$watch('inputText', function(value) {
           return scope.updateInput([value]);

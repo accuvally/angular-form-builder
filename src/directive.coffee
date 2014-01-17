@@ -372,6 +372,12 @@ fbFormObject = ($injector) ->
                     for index in [0...optionsLength] by 1
                         scope.inputArray[index] = scope.options[index] in value
             , yes
+        else
+            scope.$parent.$watch "input[#{scope.$index}].Value", (newValue, oldValue) ->
+                return if newValue is oldValue
+                if newValue[0]
+                    scope.inputText = newValue[0]
+            , yes
         scope.$watch 'inputText', (value) -> scope.updateInput [value]
         # watch (management updated form objects
         scope.$watch attrs.fbFormObject, ->
