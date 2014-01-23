@@ -27,30 +27,22 @@ fbFormObjectEditableController = ($scope, $injector) ->
         ###
         copyObjectToScope formObject, $scope
 
-        $scope.optionsText = formObject.options.join '\n'
+        $scope.optionsText = formObject.Options.join '\n'
 
-        $scope.$watch '[label, description, placeholder, required, options, validation]', ->
-            formObject.label = $scope.label
-            formObject.Label = $scope.label
-            formObject.description = $scope.description
-            formObject.Description = $scope.description
-            formObject.placeholder = $scope.placeholder
-            formObject.Placeholder = $scope.placeholder
-            formObject.required = $scope.required
-            formObject.Required = $scope.required
-            formObject.options = $scope.options
-            formObject.Options = $scope.options
-            formObject.validation = $scope.validation
-            formObject.Validation = $scope.validation
+        $scope.$watch '[Label, Description, Placeholder, Required, Options, Validation]', ->
+            formObject.Label = $scope.Label
+            formObject.Description = $scope.Description
+            formObject.Placeholder = $scope.Placeholder
+            formObject.Required = $scope.Required
+            formObject.Options = $scope.Options
+            formObject.Validation = $scope.Validation
         , yes
 
-        formObject.IdNumber = formObject.id
-
         $scope.$watch 'optionsText', (text) ->
-            $scope.options = (x for x in text.split('\n') when x.length > 0)
-            $scope.inputText = $scope.options[0]
+            $scope.Options = (x for x in text.split('\n') when x.length > 0)
+            $scope.inputText = $scope.Options[0]
 
-        component = $builder.components[formObject.component]
+        component = $builder.components[formObject.Component]
         $scope.validationOptions = component.validationOptions
 
     $scope.data =
@@ -60,23 +52,23 @@ fbFormObjectEditableController = ($scope, $injector) ->
             Backup input value.
             ###
             @model =
-                label: $scope.label
-                description: $scope.description
-                placeholder: $scope.placeholder
-                required: $scope.required
+                label: $scope.Label
+                description: $scope.Description
+                placeholder: $scope.Placeholder
+                required: $scope.Required
                 optionsText: $scope.optionsText
-                validation: $scope.validation
+                validation: $scope.Validation
         rollback: ->
             ###
             Rollback input value.
             ###
             return if not @model
-            $scope.label = @model.label
-            $scope.description = @model.description
-            $scope.placeholder = @model.placeholder
-            $scope.required = @model.required
+            $scope.Label = @model.label
+            $scope.Description = @model.description
+            $scope.Placeholder = @model.placeholder
+            $scope.Required = @model.required
             $scope.optionsText = @model.optionsText
-            $scope.validation = @model.validation
+            $scope.Validation = @model.validation
 
 fbFormObjectEditableController.$inject = ['$scope', '$injector']
 a.controller 'fbFormObjectEditableController', fbFormObjectEditableController
@@ -110,7 +102,13 @@ a.controller 'fbComponentsController', fbComponentsController
 # fbComponentController
 # ----------------------------------------
 fbComponentController = ($scope) ->
-    $scope.copyObjectToScope = (object) -> copyObjectToScope object, $scope
+    $scope.copyObjectToScope = (object) ->
+        copyObjectToScope object, $scope
+        $scope.Label = $scope.label
+        $scope.Description = $scope.description
+        $scope.Placeholder = $scope.placeholder
+        $scope.Options = $scope.options
+        $scope.Required = $scope.required
 
 fbComponentController.$inject = ['$scope']
 a.controller 'fbComponentController', fbComponentController
@@ -153,8 +151,8 @@ fbFormObjectController = ($scope, $injector) ->
         @param value: The input value.
         ###
         input =
-            IdNumber: $scope.formObject.id
-            Label: $scope.formObject.label
+            IdNumber: $scope.formObject.IdNumber
+            Label: $scope.formObject.Label
             Value: value ? []
         $scope.$parent.input.splice $scope.$index, 1, input
 

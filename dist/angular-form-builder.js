@@ -31,25 +31,18 @@
 
       var component;
       copyObjectToScope(formObject, $scope);
-      $scope.optionsText = formObject.options.join('\n');
-      $scope.$watch('[label, description, placeholder, required, options, validation]', function() {
-        formObject.label = $scope.label;
-        formObject.Label = $scope.label;
-        formObject.description = $scope.description;
-        formObject.Description = $scope.description;
-        formObject.placeholder = $scope.placeholder;
-        formObject.Placeholder = $scope.placeholder;
-        formObject.required = $scope.required;
-        formObject.Required = $scope.required;
-        formObject.options = $scope.options;
-        formObject.Options = $scope.options;
-        formObject.validation = $scope.validation;
-        return formObject.Validation = $scope.validation;
+      $scope.optionsText = formObject.Options.join('\n');
+      $scope.$watch('[Label, Description, Placeholder, Required, Options, Validation]', function() {
+        formObject.Label = $scope.Label;
+        formObject.Description = $scope.Description;
+        formObject.Placeholder = $scope.Placeholder;
+        formObject.Required = $scope.Required;
+        formObject.Options = $scope.Options;
+        return formObject.Validation = $scope.Validation;
       }, true);
-      formObject.IdNumber = formObject.id;
       $scope.$watch('optionsText', function(text) {
         var x;
-        $scope.options = (function() {
+        $scope.Options = (function() {
           var _i, _len, _ref, _results;
           _ref = text.split('\n');
           _results = [];
@@ -61,9 +54,9 @@
           }
           return _results;
         })();
-        return $scope.inputText = $scope.options[0];
+        return $scope.inputText = $scope.Options[0];
       });
-      component = $builder.components[formObject.component];
+      component = $builder.components[formObject.Component];
       return $scope.validationOptions = component.validationOptions;
     };
     return $scope.data = {
@@ -74,12 +67,12 @@
         */
 
         return this.model = {
-          label: $scope.label,
-          description: $scope.description,
-          placeholder: $scope.placeholder,
-          required: $scope.required,
+          label: $scope.Label,
+          description: $scope.Description,
+          placeholder: $scope.Placeholder,
+          required: $scope.Required,
           optionsText: $scope.optionsText,
-          validation: $scope.validation
+          validation: $scope.Validation
         };
       },
       rollback: function() {
@@ -90,12 +83,12 @@
         if (!this.model) {
           return;
         }
-        $scope.label = this.model.label;
-        $scope.description = this.model.description;
-        $scope.placeholder = this.model.placeholder;
-        $scope.required = this.model.required;
+        $scope.Label = this.model.label;
+        $scope.Description = this.model.description;
+        $scope.Placeholder = this.model.placeholder;
+        $scope.Required = this.model.required;
         $scope.optionsText = this.model.optionsText;
-        return $scope.validation = this.model.validation;
+        return $scope.Validation = this.model.validation;
       }
     };
   };
@@ -138,7 +131,12 @@
 
   fbComponentController = function($scope) {
     return $scope.copyObjectToScope = function(object) {
-      return copyObjectToScope(object, $scope);
+      copyObjectToScope(object, $scope);
+      $scope.Label = $scope.label;
+      $scope.Description = $scope.description;
+      $scope.Placeholder = $scope.placeholder;
+      $scope.Options = $scope.options;
+      return $scope.Required = $scope.required;
     };
   };
 
@@ -181,8 +179,8 @@
 
       var input;
       input = {
-        IdNumber: $scope.formObject.id,
-        Label: $scope.formObject.label,
+        IdNumber: $scope.formObject.IdNumber,
+        Label: $scope.formObject.Label,
         Value: value != null ? value : []
       };
       return $scope.$parent.input.splice($scope.$index, 1, input);
@@ -241,7 +239,7 @@
             positions.push(positions[positions.length - 1] + 1000);
             uneditableIndex = -1;
             for (index = _j = _ref1 = scope.formObjects.length - 1; _j >= 0; index = _j += -1) {
-              if (!(!scope.formObjects[index].editable)) {
+              if (!(!scope.formObjects[index].Editable)) {
                 continue;
               }
               uneditableIndex = index;
@@ -277,20 +275,20 @@
             }
             if (!isHover && draggable.mode === 'drag') {
               formObject = draggable.object.formObject;
-              if (formObject.editable) {
-                $builder.removeFormObject(attrs.fbBuilder, formObject.index);
+              if (formObject.Editable) {
+                $builder.removeFormObject(attrs.fbBuilder, formObject.OrderBy);
               }
             } else if (isHover) {
               if (draggable.mode === 'mirror') {
                 index = $(element).find('.empty').index('.fb-form-object-editable');
                 if (index >= 0) {
                   $builder.insertFormObject(scope.formName, $(element).find('.empty').index('.fb-form-object-editable'), {
-                    component: draggable.object.componentName
+                    Component: draggable.object.componentName
                   });
                 }
               }
               if (draggable.mode === 'drag') {
-                oldIndex = draggable.object.formObject.index;
+                oldIndex = draggable.object.formObject.OrderBy;
                 newIndex = $(element).find('.empty').index('.fb-form-object-editable');
                 if (oldIndex < newIndex) {
                   newIndex--;
@@ -321,14 +319,14 @@
         $compile = $injector.get('$compile');
         $validator = $injector.get('$validator');
         formObject = $parse(attrs.fbFormObjectEditable)(scope);
-        component = $builder.components[formObject.component];
+        component = $builder.components[formObject.Component];
         scope.setupScope(formObject);
         view = $compile(component.template)(scope);
         $(element).append(view);
         $(element).on('click', function() {
           return false;
         });
-        if (formObject.editable) {
+        if (formObject.Editable) {
           $drag.draggable($(element), {
             object: {
               formObject: formObject
@@ -518,7 +516,7 @@
         $compile = $injector.get('$compile');
         $parse = $injector.get('$parse');
         scope.formObject = $parse(attrs.fbFormObject)(scope);
-        component = $builder.components[scope.formObject.component];
+        component = $builder.components[scope.formObject.Component];
         scope.$on($builder.broadcastChannel.updateInput, function() {
           var _ref;
           return scope.updateInput([(_ref = scope.inputText) != null ? _ref : '']);
@@ -533,7 +531,7 @@
             checked = [];
             for (index in scope.inputArray) {
               if (scope.inputArray[index]) {
-                checked.push(scope.options[index]);
+                checked.push(scope.Options[index]);
               }
             }
             return scope.updateInput(checked);
@@ -544,10 +542,10 @@
               if (value.length === 1 && value[0]) {
                 scope.inputText = value[0];
               }
-              optionsLength = scope.options ? scope.options.length : 0;
+              optionsLength = scope.Options ? scope.Options.length : 0;
               _results = [];
               for (index = _i = 0; _i < optionsLength; index = _i += 1) {
-                _results.push(scope.inputArray[index] = (_ref = scope.options[index], __indexOf.call(value, _ref) >= 0));
+                _results.push(scope.inputArray[index] = (_ref = scope.Options[index], __indexOf.call(value, _ref) >= 0));
               }
               return _results;
             }
@@ -575,8 +573,8 @@
         });
         view = $compile($template)(scope);
         $(element).append(view);
-        if (!component.arrayToText && scope.formObject.options.length > 0) {
-          return scope.inputText = scope.formObject.options[0];
+        if (!component.arrayToText && scope.formObject.Options.length > 0) {
+          return scope.inputText = scope.formObject.Options[0];
         }
       }
     };
@@ -1060,30 +1058,26 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref10, _ref11, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
       if (formObject == null) {
         formObject = {};
       }
-      formObject = this.bleach.toLowerCase(formObject);
-      formObject.id = (_ref = formObject.id) != null ? _ref : formObject.idNumber;
-      formObject.index = (_ref1 = formObject.index) != null ? _ref1 : formObject.orderBy;
-      component = this.components[formObject.component];
+      formObject = this.bleach.toUpperCase(formObject);
+      component = this.components[formObject.Component];
       if (component == null) {
-        throw "The component " + formObject.component + " was not registered.";
+        throw "The component " + formObject.Component + " was not registered.";
       }
       result = {
-        id: (_ref2 = formObject.id) != null ? _ref2 : null,
-        component: formObject.component,
-        Component: formObject.component,
-        editable: (_ref3 = formObject.editable) != null ? _ref3 : component.editable,
-        Editable: (_ref4 = formObject.editable) != null ? _ref4 : component.editable,
-        index: (_ref5 = formObject.index) != null ? _ref5 : 0,
-        label: (_ref6 = formObject.label) != null ? _ref6 : component.label,
-        description: (_ref7 = formObject.description) != null ? _ref7 : component.description,
-        placeholder: (_ref8 = formObject.placeholder) != null ? _ref8 : component.placeholder,
-        options: (_ref9 = formObject.options) != null ? _ref9 : component.options,
-        required: (_ref10 = formObject.required) != null ? _ref10 : component.required,
-        validation: (_ref11 = formObject.validation) != null ? _ref11 : component.validation
+        IdNumber: (_ref = formObject.IdNumber) != null ? _ref : null,
+        Component: formObject.Component,
+        Editable: (_ref1 = formObject.Editable) != null ? _ref1 : component.editable,
+        OrderBy: (_ref2 = formObject.OrderBy) != null ? _ref2 : 0,
+        Label: (_ref3 = formObject.Label) != null ? _ref3 : component.label,
+        Description: (_ref4 = formObject.Description) != null ? _ref4 : component.description,
+        Placeholder: (_ref5 = formObject.Placeholder) != null ? _ref5 : component.placeholder,
+        Options: (_ref6 = formObject.Options) != null ? _ref6 : component.options,
+        Required: (_ref7 = formObject.Required) != null ? _ref7 : component.required,
+        Validation: (_ref8 = formObject.Validation) != null ? _ref8 : component.validation
       };
       return result;
     };
@@ -1091,7 +1085,6 @@
       var formObjects, index, _i, _ref;
       formObjects = _this.forms[name];
       for (index = _i = 0, _ref = formObjects.length; _i < _ref; index = _i += 1) {
-        formObjects[index].index = index;
         formObjects[index].OrderBy = index;
       }
     };

@@ -68,31 +68,26 @@ a.provider '$builder', ->
 
     @convertFormObject = (name, formObject={}) ->
         # clear dirty data
-        formObject = @bleach.toLowerCase formObject
-        formObject.id = formObject.id ? formObject.idNumber
-        formObject.index = formObject.index ? formObject.orderBy
+        formObject = @bleach.toUpperCase formObject
 
-        component = @components[formObject.component]
-        throw "The component #{formObject.component} was not registered." if not component?
+        component = @components[formObject.Component]
+        throw "The component #{formObject.Component} was not registered." if not component?
         result =
-            id: formObject.id ? null
-            component: formObject.component
-            Component: formObject.component
-            editable: formObject.editable ? component.editable
-            Editable: formObject.editable ? component.editable
-            index: formObject.index ? 0
-            label: formObject.label ? component.label
-            description: formObject.description ? component.description
-            placeholder: formObject.placeholder ? component.placeholder
-            options: formObject.options ? component.options
-            required: formObject.required ? component.required
-            validation: formObject.validation ? component.validation
+            IdNumber: formObject.IdNumber ? null
+            Component: formObject.Component
+            Editable: formObject.Editable ? component.editable
+            OrderBy: formObject.OrderBy ? 0
+            Label: formObject.Label ? component.label
+            Description: formObject.Description ? component.description
+            Placeholder: formObject.Placeholder ? component.placeholder
+            Options: formObject.Options ? component.options
+            Required: formObject.Required ? component.required
+            Validation: formObject.Validation ? component.validation
         result
 
     @reindexFormObject = (name) =>
         formObjects = @forms[name]
         for index in [0...formObjects.length] by 1
-            formObjects[index].index = index
             formObjects[index].OrderBy = index
         return
 

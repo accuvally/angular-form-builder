@@ -20,10 +20,10 @@ config = ($builderProvider) ->
         template:
             """
             <div class="form-group">
-                <label for="{{formName+index}}" class="col-md-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
+                <label for="{{formName+OrderBy}}" class="col-md-4 control-label" ng-class="{'fb-required':Required}">{{Label}}</label>
                 <div class="col-md-8">
-                    <input type="text" ng-model="inputText" validator-required="{{required}}" validator-group="{{formName}}" id="{{formName+index}}" class="form-control" placeholder="{{placeholder}}"/>
-                    <p class='help-block'>{{description}}</p>
+                    <input type="text" ng-model="inputText" validator-required="{{Required}}" validator-group="{{formName}}" id="{{formName+OrderBy}}" class="form-control" placeholder="{{Placeholder}}"/>
+                    <p class='help-block'>{{Description}}</p>
                 </div>
             </div>
             """
@@ -32,24 +32,24 @@ config = ($builderProvider) ->
             <form>
                 <div class="form-group">
                     <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                    <input type='text' ng-model="Label" validator="[required]" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
+                    <input type='text' ng-model="Description" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Placeholder</label>
-                    <input type='text' ng-model="placeholder" class='form-control'/>
+                    <input type='text' ng-model="Placeholder" class='form-control'/>
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type='checkbox' ng-model="required" />
+                        <input type='checkbox' ng-model="Required" />
                         Required</label>
                 </div>
                 <div class="form-group" ng-if="validationOptions.length > 0">
                     <label class='control-label'>Validation</label>
-                    <select ng-model="$parent.validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
+                    <select ng-model="$parent.Validation" class='form-control' ng-options="option.rule as option.label for option in validationOptions"></select>
                 </div>
 
                 <hr/>
@@ -73,10 +73,10 @@ config = ($builderProvider) ->
         template:
             """
             <div class="form-group">
-                <label for="{{formName+index}}" class="col-md-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
+                <label for="{{formName+OrderBy}}" class="col-md-4 control-label" ng-class="{'fb-required':Required}">{{Label}}</label>
                 <div class="col-md-8">
-                    <textarea type="text" ng-model="inputText" validator-required="{{required}}" validator-group="{{formName}}" id="{{formName+index}}" class="form-control" rows='6' placeholder="{{placeholder}}"/>
-                    <p class='help-block'>{{description}}</p>
+                    <textarea type="text" ng-model="inputText" validator-required="{{Required}}" validator-group="{{formName}}" id="{{formName+OrderBy}}" class="form-control" rows='6' placeholder="{{Placeholder}}"/>
+                    <p class='help-block'>{{Description}}</p>
                 </div>
             </div>
             """
@@ -85,19 +85,19 @@ config = ($builderProvider) ->
             <form>
                 <div class="form-group">
                     <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                    <input type='text' ng-model="Label" validator="[required]" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
+                    <input type='text' ng-model="Description" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Placeholder</label>
-                    <input type='text' ng-model="placeholder" class='form-control'/>
+                    <input type='text' ng-model="Placeholder" class='form-control'/>
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type='checkbox' ng-model="required" />
+                        <input type='checkbox' ng-model="Required" />
                         Required</label>
                 </div>
 
@@ -124,10 +124,10 @@ config = ($builderProvider) ->
         template:
             """
             <div class="form-group">
-                <label for="{{formName+index}}" class="col-md-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
+                <label for="{{formName+OrderBy}}" class="col-md-4 control-label" ng-class="{'fb-required':Required}">{{Label}}</label>
                 <div class="col-md-8">
-                    <input type='hidden' ng-model="inputText" validator-required="{{required}}" validator-group="{{formName}}"/>
-                    <div class='checkbox' ng-repeat="item in options track by $index">
+                    <input type='hidden' ng-model="inputText" validator-required="{{Required}}" validator-group="{{formName}}"/>
+                    <div class='checkbox' ng-repeat="item in Options track by $index">
                         <label><input type='checkbox' ng-model="$parent.inputArray[$index]" value='item'/>
                             {{item}}
                         </label>
@@ -141,11 +141,11 @@ config = ($builderProvider) ->
             <form>
                 <div class="form-group">
                     <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                    <input type='text' ng-model="Label" validator="[required]" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
+                    <input type='text' ng-model="Description" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Options</label>
@@ -153,7 +153,7 @@ config = ($builderProvider) ->
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type='checkbox' ng-model="required" />
+                        <input type='checkbox' ng-model="Required" />
                         Required
                     </label>
                 </div>
@@ -180,14 +180,14 @@ config = ($builderProvider) ->
         template:
             """
             <div class="form-group">
-                <label for="{{formName+index}}" class="col-md-4 control-label" ng-class="{'fb-required':required}">{{label}}</label>
+                <label for="{{formName+OrderBy}}" class="col-md-4 control-label" ng-class="{'fb-required':Required}">{{Label}}</label>
                 <div class="col-md-8">
-                    <div class='radio' ng-repeat="item in options track by $index">
-                        <label><input name='{{formName+index}}' ng-model="$parent.inputText" validator-group="{{formName}}" value='{{item}}' type='radio'/>
+                    <div class='radio' ng-repeat="item in Options track by $index">
+                        <label><input name='{{formName+OrderBy}}' ng-model="$parent.inputText" validator-group="{{formName}}" value='{{item}}' type='radio'/>
                             {{item}}
                         </label>
                     </div>
-                    <p class='help-block'>{{description}}</p>
+                    <p class='help-block'>{{Description}}</p>
                 </div>
             </div>
             """
@@ -196,11 +196,11 @@ config = ($builderProvider) ->
             <form>
                 <div class="form-group">
                     <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                    <input type='text' ng-model="Label" validator="[Required]" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
+                    <input type='text' ng-model="Description" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Options</label>
@@ -229,11 +229,11 @@ config = ($builderProvider) ->
         template:
             """
             <div class="form-group">
-                <label for="{{formName+index}}" class="col-md-4 control-label">{{label}}</label>
+                <label for="{{formName+OrderBy}}" class="col-md-4 control-label">{{Label}}</label>
                 <div class="col-md-8">
-                    <select ng-options="value for value in options" id="{{formName+index}}" class="form-control"
-                        ng-model="inputText" ng-init="inputText = options[0]"/>
-                    <p class='help-block'>{{description}}</p>
+                    <select ng-options="value for value in Options" id="{{formName+OrderBy}}" class="form-control"
+                        ng-model="inputText" ng-init="inputText = Options[0]"/>
+                    <p class='help-block'>{{Description}}</p>
                 </div>
             </div>
             """
@@ -242,11 +242,11 @@ config = ($builderProvider) ->
             <form>
                 <div class="form-group">
                     <label class='control-label'>Label</label>
-                    <input type='text' ng-model="label" validator="[required]" class='form-control'/>
+                    <input type='text' ng-model="Label" validator="[Required]" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Description</label>
-                    <input type='text' ng-model="description" class='form-control'/>
+                    <input type='text' ng-model="Description" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Options</label>

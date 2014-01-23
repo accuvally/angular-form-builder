@@ -62,7 +62,7 @@ fbBuilder = ($injector) ->
 
                 # search where should I insert the .empty
                 uneditableIndex = -1
-                for index in [(scope.formObjects.length - 1)..0] by -1 when not scope.formObjects[index].editable
+                for index in [(scope.formObjects.length - 1)..0] by -1 when not scope.formObjects[index].Editable
                     uneditableIndex = index
                     break
                 positionStart = if uneditableIndex >= 0 then uneditableIndex + 2 else 1
@@ -94,18 +94,18 @@ fbBuilder = ($injector) ->
                 if not isHover and draggable.mode is 'drag'
                     # remove the form object by draggin out
                     formObject = draggable.object.formObject
-                    if formObject.editable
-                        $builder.removeFormObject attrs.fbBuilder, formObject.index
+                    if formObject.Editable
+                        $builder.removeFormObject attrs.fbBuilder, formObject.OrderBy
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object
                         index = $(element).find('.empty').index('.fb-form-object-editable')
                         if index >= 0
                             $builder.insertFormObject scope.formName, $(element).find('.empty').index('.fb-form-object-editable'),
-                                component: draggable.object.componentName
+                                Component: draggable.object.componentName
                     if draggable.mode is 'drag'
                         # update the index of form objects
-                        oldIndex = draggable.object.formObject.index
+                        oldIndex = draggable.object.formObject.OrderBy
                         newIndex = $(element).find('.empty').index('.fb-form-object-editable')
                         newIndex-- if oldIndex < newIndex
                         $builder.updateFormObjectIndex scope.formName, oldIndex, newIndex
@@ -130,7 +130,7 @@ fbFormObjectEditable = ($injector) ->
         # get formObject
         formObject = $parse(attrs.fbFormObjectEditable) scope
         # get component
-        component = $builder.components[formObject.component]
+        component = $builder.components[formObject.Component]
         # setup scope
         scope.setupScope formObject
 
@@ -142,7 +142,7 @@ fbFormObjectEditable = ($injector) ->
         $(element).on 'click', -> no
 
         # draggable
-        if formObject.editable
+        if formObject.Editable
             $drag.draggable $(element),
                 object:
                     formObject: formObject
@@ -347,7 +347,7 @@ fbFormObject = ($injector) ->
         # variables
         # ----------------------------------------
         scope.formObject = $parse(attrs.fbFormObject) scope
-        component = $builder.components[scope.formObject.component]
+        component = $builder.components[scope.formObject.Component]
 
         # ----------------------------------------
         # scope
@@ -362,15 +362,15 @@ fbFormObject = ($injector) ->
                 return if newValue is oldValue
                 checked = []
                 for index of scope.inputArray when scope.inputArray[index]
-                    checked.push scope.options[index]
+                    checked.push scope.Options[index]
                 scope.updateInput checked
             , yes
             scope.$parent.$watch "input[#{scope.$index}].Value", (value) ->
                 if value
                     scope.inputText = value[0] if value.length is 1 and value[0]
-                    optionsLength = if scope.options then scope.options.length else 0
+                    optionsLength = if scope.Options then scope.Options.length else 0
                     for index in [0...optionsLength] by 1
-                        scope.inputArray[index] = scope.options[index] in value
+                        scope.inputArray[index] = scope.Options[index] in value
             , yes
         else
             scope.$parent.$watch "input[#{scope.$index}].Value", (newValue, oldValue) ->
@@ -394,8 +394,8 @@ fbFormObject = ($injector) ->
         view = $compile($template) scope
         $(element).append view
 
-        if not component.arrayToText and scope.formObject.options.length > 0
-            scope.inputText = scope.formObject.options[0]
+        if not component.arrayToText and scope.formObject.Options.length > 0
+            scope.inputText = scope.formObject.Options[0]
 
 fbFormObject.$inject = ['$injector']
 a.directive 'fbFormObject', fbFormObject
