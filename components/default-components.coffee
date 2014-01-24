@@ -196,7 +196,7 @@ config = ($builderProvider) ->
             <form>
                 <div class="form-group">
                     <label class='control-label'>Label</label>
-                    <input type='text' ng-model="Label" validator="[Required]" class='form-control'/>
+                    <input type='text' ng-model="Label" validator="[required]" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Description</label>
@@ -242,7 +242,7 @@ config = ($builderProvider) ->
             <form>
                 <div class="form-group">
                     <label class='control-label'>Label</label>
-                    <input type='text' ng-model="Label" validator="[Required]" class='form-control'/>
+                    <input type='text' ng-model="Label" validator="[required]" class='form-control'/>
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Description</label>
