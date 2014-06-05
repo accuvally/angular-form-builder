@@ -1,7 +1,6 @@
+angular.module 'builder.components', ['builder', 'validator.rules']
 
-a = angular.module 'builder.components', ['builder', 'validator.rules']
-
-config = ($builderProvider) ->
+.config ['$builderProvider', ($builderProvider) ->
     # ----------------------------------------
     # text input
     # ----------------------------------------
@@ -12,10 +11,10 @@ config = ($builderProvider) ->
         placeholder: 'placeholder'
         required: no
         validationOptions: [
-            label: 'none', rule: '/.*/'
-        ,   label: 'number', rule: '[number]',
-            label: 'email', rule: '[email]'
-        ,   label: 'url', rule: '[url]'
+            {label: 'none', rule: '/.*/'}
+            {label: 'number', rule: '[number]'}
+            {label: 'email', rule: '[email]'}
+            {label: 'url', rule: '[url]'}
         ]
         template:
             """
@@ -261,6 +260,4 @@ config = ($builderProvider) ->
                 </div>
             </form>
             """
-
-config.$inject = ['$builderProvider']
-a.config config
+]

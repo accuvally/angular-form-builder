@@ -2,16 +2,25 @@
 # ----------------------------------------
 # builder.directive
 # ----------------------------------------
-a = angular.module 'builder.directive',
-    ['builder.provider', 'builder.controller', 'builder.drag',
-     'validator']
+angular.module 'builder.directive', [
+    'builder.provider'
+    'builder.controller'
+    'builder.drag'
+    'validator'
+]
 
 
 # ----------------------------------------
 # fb-builder
 # ----------------------------------------
-fbBuilder = ($injector) ->
+.directive 'fbBuilder', ['$injector', ($injector) ->
+    # providers
+    $builder = $injector.get '$builder'
+    $drag = $injector.get '$drag'
+
     restrict: 'A'
+    scope:
+        fbBuilder: '='
     template:
         """
         <div class='form-horizontal'>
@@ -20,12 +29,6 @@ fbBuilder = ($injector) ->
         </div>
         """
     link: (scope, element, attrs) ->
-        # ----------------------------------------
-        # providers
-        # ----------------------------------------
-        $builder = $injector.get '$builder'
-        $drag = $injector.get '$drag'
-
         # ----------------------------------------
         # valuables
         # ----------------------------------------
@@ -61,12 +64,14 @@ fbBuilder = ($injector) ->
                 positions.push positions[positions.length - 1] + 1000   # last
 
                 # search where should I insert the .empty
-                uneditableIndex = -1
-                for index in [(scope.formObjects.length - 1)..0] by -1 when not scope.formObjects[index].Editable
-                    uneditableIndex = index
-                    break
-                positionStart = if uneditableIndex >= 0 then uneditableIndex + 2 else 1
-                for index in [positionStart...positions.length] by 1
+                # uneditableIndex = -1
+                # for index in [(scope.formObjects.length - 1)..0] by -1 when not scope.formObjects[index].Editable
+                #     uneditableIndex = index
+                #     break
+                # positionStart = if uneditableIndex >= 0 then uneditableIndex + 2 else 1
+                # for index in [positionStart...positions.length] by 1
+
+                for index in [1...positions.length] by 1
                     if e.pageY > positions[index - 1] and e.pageY <= positions[index]
                         # you known, this one
                         $(element).find('.empty').remove()
@@ -85,6 +90,7 @@ fbBuilder = ($injector) ->
 
                 $(element).find('.empty').remove()
             up: (e, isHover, draggable) ->
+
                 beginMove = yes
                 if not $drag.isMouseMoved()
                     # click event
@@ -93,13 +99,14 @@ fbBuilder = ($injector) ->
 
                 if not isHover and draggable.mode is 'drag'
                     # remove the form object by draggin out
-                    formObject = draggable.object.formObject
+                    formObject = draggable.object.formObject7
                     if formObject.Editable
                         $builder.removeFormObject attrs.fbBuilder, formObject.OrderBy
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object
                         index = $(element).find('.empty').index('.fb-form-object-editable')
+                        console.log draggable
                         if index >= 0
                             $builder.insertFormObject scope.formName, $(element).find('.empty').index('.fb-form-object-editable'),
                                 Component: draggable.object.componentName
@@ -110,55 +117,68 @@ fbBuilder = ($injector) ->
                         newIndex-- if oldIndex < newIndex
                         $builder.updateFormObjectIndex scope.formName, oldIndex, newIndex
                 $(element).find('.empty').remove()
-fbBuilder.$inject = ['$injector']
-a.directive 'fbBuilder', fbBuilder
+]
 
 # ----------------------------------------
 # fb-form-object-editable
 # ----------------------------------------
-fbFormObjectEditable = ($injector) ->
+.directive 'fbFormObjectEditable', ['$injector', ($injector) ->
+    # providers
+    $builder = $injector.get '$builder'
+    $drag = $injector.get '$drag'
+    $compile = $injector.get '$compile'
+    $validator = $injector.get '$validator'
+
     restrict: 'A'
     controller: 'fbFormObjectEditableController'
-    link: (scope, element, attrs) ->
-        # providers
-        $builder = $injector.get '$builder'
-        $drag = $injector.get '$drag'
-        $parse = $injector.get '$parse'
-        $compile = $injector.get '$compile'
-        $validator = $injector.get '$validator'
-
-        # get formObject
-        formObject = $parse(attrs.fbFormObjectEditable) scope
+    scope:
+        formObject: '=fbFormObjectEditable'
+    link: (scope, element) ->
+        scope.inputArray = [] # just for fix warning
         # get component
-        component = $builder.components[formObject.Component]
+        scope.$component = $builder.components[scope.formObject.Component]
+
         # setup scope
-        scope.setupScope formObject
+        scope.setupScope scope.formObject
 
         # compile formObject
-        view = $compile(component.template) scope
-        $(element).append view
+        scope.$watch '$component.Template', (template) ->
+            return if not template
+            view = $compile(template) scope
+            $(element).html view
 
         # disable click event
         $(element).on 'click', -> no
 
         # draggable
-        if formObject.Editable
-            $drag.draggable $(element),
-                object:
-                    formObject: formObject
-        else
-            # do not setup bootstrap popover
-            return
+        $drag.draggable $(element),
+            object:
+                formObject: scope.formObject
+
+        # do not setup bootstrap popover
+        return if not scope.formObject.Editable
 
         # ----------------------------------------
         # bootstrap popover
         # ----------------------------------------
-        popover =
-            id: "fb-#{Math.random().toString().substr(2)}"
-            isClickedSave: no # If didn't click save then rollback
-            view: null
-            html: component.popoverTemplate
-        popover.html = $(popover.html).addClass popover.id
+        popover = {}
+        scope.$watch '$component.PopoverTemplate', (template) ->
+            return if not template
+            $(element).removeClass popover.id
+            popover =
+                id: "fb-#{Math.random().toString().substr(2)}"
+                isClickedSave: no # If didn't click save then rollback
+                view: null
+                html: template
+            popover.html = $(popover.html).addClass popover.id
+            # compile popover
+            popover.view = $compile(popover.html) scope
+            $(element).addClass popover.id
+            $(element).popover
+                html: yes
+                title: scope.$component.label
+                content: popover.view
+                container: 'body'
         scope.popover =
             save: ($event) ->
                 ###
@@ -175,7 +195,7 @@ fbFormObjectEditable = ($injector) ->
                 ###
                 $event.preventDefault()
 
-                $builder.removeFormObject scope.formName, scope.$index
+                $builder.removeFormObject scope.$parent.formName, scope.$index
                 $(element).popover 'hide'
                 return
             shown: ->
@@ -194,14 +214,6 @@ fbFormObjectEditable = ($injector) ->
                     $event.preventDefault()
                     $(element).popover 'hide'
                 return
-        # compile popover
-        popover.view = $compile(popover.html) scope
-        $(element).addClass popover.id
-        $(element).popover
-            html: yes
-            title: component.label
-            content: popover.view
-            container: 'body'
         # ----------------------------------------
         # popover.show
         # ----------------------------------------
@@ -241,7 +253,7 @@ fbFormObjectEditable = ($injector) ->
             $popover = $("form.#{popover.id}").closest '.popover'
             if not popover.isClickedSave
                 # eval the cancel event
-                if scope.$$phase
+                if scope.$$phase or scope.$root.$$phase
                     scope.popover.cancel()
                 else
                     scope.$apply -> scope.popover.cancel()
@@ -250,14 +262,13 @@ fbFormObjectEditable = ($injector) ->
                 $popover.hide()
             , 300
             no
-fbFormObjectEditable.$inject = ['$injector']
-a.directive 'fbFormObjectEditable', fbFormObjectEditable
+]
 
 
 # ----------------------------------------
 # fb-components
 # ----------------------------------------
-fbComponents = ->
+.directive 'fbComponents', ->
     restrict: 'A'
     template:
         """
@@ -267,51 +278,52 @@ fbComponents = ->
             </li>
         </ul>
         <div class='form-horizontal'>
-            <div class='fb-component' ng-repeat="component in components"
+            <div class='fb-component' ng-repeat="component in allComponents"
                 fb-component="component"></div>
         </div>
         """
     controller: 'fbComponentsController'
-a.directive 'fbComponents', fbComponents
 
 # ----------------------------------------
 # fb-component
 # ----------------------------------------
-fbComponent = ($injector) ->
-    restrict: 'A'
-    controller: 'fbComponentController'
-    link: (scope, element, attrs) ->
-        # providers
-        $builder = $injector.get '$builder'
-        $drag = $injector.get '$drag'
-        $parse = $injector.get '$parse'
-        $compile = $injector.get '$compile'
+.directive 'fbComponent', ['$injector', ($injector) ->
+    # providers
+    $builder = $injector.get '$builder'
+    $drag = $injector.get '$drag'
+    $compile = $injector.get '$compile'
 
-        # valuables
-        component = $parse(attrs.fbComponent) scope
-        scope.copyObjectToScope component
+    restrict: 'A'
+    scope:
+        component: '=fbComponent'
+    controller: 'fbComponentController'
+    link: (scope, element) ->
+        scope.copyObjectToScope scope.component
 
         $drag.draggable $(element),
             mode: 'mirror'
             defer: no
             object:
-                componentName: component.name
+                componentName: scope.component.Name
 
-        view = $compile(component.template) scope
-        $(element).append view
-fbComponent.$inject = ['$injector']
-a.directive 'fbComponent', fbComponent
+        scope.$watch 'component.Template', (template) ->
+            return if not template
+            view = $compile(template) scope
+            $(element).html view
+]
 
 
 # ----------------------------------------
 # fb-form
 # ----------------------------------------
-fbForm = ($injector) ->
+.directive 'fbForm', ['$injector', ($injector) ->
     restrict: 'A'
     require: 'ngModel'  # form data (end-user input value)
     scope:
         # input model for scops in ng-repeat
+        formName: '@fbForm'
         input: '=ngModel'
+        default: '=fbDefault'
     template:
         """
         <div class='fb-form-object' ng-repeat="object in form" fb-form-object="object"></div>
@@ -321,40 +333,35 @@ fbForm = ($injector) ->
         # providers
         $builder = $injector.get '$builder'
 
-        # get the form name for directive
-        scope.formName = attrs.fbForm
         # get the form for controller
-        scope.form = $builder.forms[attrs.fbForm]
-
-fbForm.$inject = ['$injector']
-a.directive 'fbForm', fbForm
+        $builder.forms[scope.formName] ?= []
+        scope.form = $builder.forms[scope.formName]
+]
 
 # ----------------------------------------
 # fb-form-object
 # ----------------------------------------
-fbFormObject = ($injector) ->
+.directive 'fbFormObject', ['$injector', ($injector) ->
+    # providers
+    $builder = $injector.get '$builder'
+    $compile = $injector.get '$compile'
+    $parse = $injector.get '$parse'
+
     restrict: 'A'
     controller: 'fbFormObjectController'
     link: (scope, element, attrs) ->
         # ----------------------------------------
-        # providers
-        # ----------------------------------------
-        $builder = $injector.get '$builder'
-        $compile = $injector.get '$compile'
-        $parse = $injector.get '$parse'
-
-        # ----------------------------------------
         # variables
         # ----------------------------------------
         scope.formObject = $parse(attrs.fbFormObject) scope
-        component = $builder.components[scope.formObject.Component]
+        scope.$component = $builder.components[scope.formObject.Component]
 
         # ----------------------------------------
         # scope
         # ----------------------------------------
         # listen (formObject updated
-        scope.$on $builder.broadcastChannel.updateInput, -> scope.updateInput [scope.inputText ? '']
-        if component.arrayToText
+        scope.$on $builder.broadcastChannel.updateInput, -> scope.updateInput scope.inputText
+        if scope.$component.arrayToText
             scope.inputArray = []
             # watch (end-user updated input of the form
             scope.$watch 'inputArray', (newValue, oldValue) ->
@@ -384,19 +391,26 @@ fbFormObject = ($injector) ->
             scope.copyObjectToScope scope.formObject
         , yes
 
-        $template = $ component.template
-        # add validator
-        $input = $template.find "[ng-model='inputText']"
-        $input.attr
-            validator: '{{validation}}'
+        scope.$watch '$component.Template', (template) ->
+            return if not template
+            $template = $(template)
+            # add validator
+            $input = $template.find "[ng-model='inputText']"
+            $input.attr
+                validator: '{{Validation}}' # validation
+            # compile
+            view = $compile($template) scope
+            $(element).html view
 
-        # compile
-        view = $compile($template) scope
-        $(element).append view
-
-        if not component.arrayToText and scope.formObject.Options.length > 0
+        # select the first option
+        if not scope.$component.arrayToText and scope.formObject.Options.length > 0
             scope.inputText = scope.formObject.Options[0]
 
-fbFormObject.$inject = ['$injector']
-a.directive 'fbFormObject', fbFormObject
-
+        # set default value
+        scope.$watch "default[#{scope.formObject.id}]", (value) ->
+            return if not value
+            if scope.$component.arrayToText
+                scope.inputArray = value
+            else
+                scope.inputText = value
+]

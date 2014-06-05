@@ -11,13 +11,14 @@
         They can input the value to the form.
 ###
 
-a = angular.module 'builder.provider', []
+angular.module 'builder.provider', []
 
-a.provider '$builder', ->
-    # ----------------------------------------
-    # properties
-    # ----------------------------------------
-    @version = '0.0.0'
+.provider '$builder', ->
+    $injector = null
+    $http = null
+    $templateCache = null
+
+    @version = '0.0.2'
     # all components
     @components = {}
     # all groups of components
@@ -30,7 +31,8 @@ a.provider '$builder', ->
     #   form mode: `fb-form` this is the form for end-user to input value.
     @forms =
         default: []
-
+    @formsId =
+        default: 0
 
     # ----------------------------------------
     # private functions
@@ -49,40 +51,53 @@ a.provider '$builder', ->
 
     @convertComponent = (name, component) ->
         result =
-            name: name
-            group: component.group ? 'Default'
-            label: component.label ? ''
-            description: component.description ? ''
-            placeholder: component.placeholder ? ''
-            editable: component.editable ? yes
-            required: component.required ? no
-            validation: component.validation ? '/.*/'
-            validationOptions: component.validationOptions ? []
-            options: component.options ? []
-            arrayToText: component.arrayToText ? no
-            template: component.template
-            popoverTemplate: component.popoverTemplate
-        if not result.template then console.error "The template is empty."
-        if not result.popoverTemplate then console.error "The popoverTemplate is empty."
+            Name: name
+            Group: component.group ? 'Default'
+            Label: component.label ? ''
+            Description: component.description ? ''
+            Placeholder: component.placeholder ? ''
+            Editable: component.editable ? yes
+            Required: component.required ? no
+            Validation: component.validation ? '/.*/'
+            ValidationOptions: component.validationOptions ? []
+            Options: component.options ? []
+            ArrayToText: component.arrayToText ? no
+            Template: component.template
+            TemplateUrl: component.templateUrl
+            PopoverTemplate: component.popoverTemplate
+            PopoverTemplateUrl: component.popoverTemplateUrl
+
+        if not result.Template and not result.TemplateUrl
+            console.error "The template is empty."
+        if not result.PopoverTemplate and not result.PopoverTemplateUrl
+            console.error "The popoverTemplate is empty."
         result
 
     @convertFormObject = (name, formObject={}) ->
         # clear dirty data
         formObject = @bleach.toUpperCase formObject
-
         component = @components[formObject.Component]
         throw "The component #{formObject.Component} was not registered." if not component?
+
+        if formObject.IdNumber
+            exist = no
+            for form in @forms[name] when formObject.IdNumber <= form.IdNumber# less and equal
+                formObject.IdNumber = @formsId[name]++
+                exist = yes
+                break
+            @formsId[name] = formObject.IdNumbers + 1 if not exist
+
         result =
-            IdNumber: formObject.IdNumber ? null
+            IdNumber: formObject.IdNumber ? @formsId[name]++
             Component: formObject.Component
-            Editable: formObject.Editable ? component.editable
+            Editable: formObject.Editable ? component.Editable
             OrderBy: formObject.OrderBy ? 0
-            Label: formObject.Label ? component.label
-            Description: formObject.Description ? component.description
-            Placeholder: formObject.Placeholder ? component.placeholder
-            Options: formObject.Options ? component.options
-            Required: formObject.Required ? component.required
-            Validation: formObject.Validation ? component.validation
+            Label: formObject.Label ? component.Label
+            Description: formObject.Description ? component.Description
+            Placeholder: formObject.Placeholder ? component.Placeholder
+            Options: formObject.Options ? component.Options
+            Required: formObject.Required ? component.Required
+            Validation: formObject.Validation ? component.Validation
         result
 
     @reindexFormObject = (name) =>
@@ -90,6 +105,27 @@ a.provider '$builder', ->
         for index in [0...formObjects.length] by 1
             formObjects[index].OrderBy = index
         return
+
+    @setupProviders = (injector) =>
+        $injector = injector
+        $http = $injector.get '$http'
+        $templateCache = $injector.get '$templateCache'
+
+    @loadTemplate = (component) ->
+        ###
+        Load template for components.
+        @param component: {object} The component of $builder.
+        ###
+        if not component.Template?
+            $http.get component.TemplateUrl,
+                cache: $templateCache
+            .success (template) ->
+                component.Template = template
+        if not component.PopoverTemplate?
+            $http.get component.PopoverTemplateUrl,
+                cache: $templateCache
+            .success (template) ->
+                component.PopoverTemplate = template
 
     # ----------------------------------------
     # public functions
@@ -110,14 +146,17 @@ a.provider '$builder', ->
             options: {array} The input options.
             arrayToText: {bool} checkbox could use this to convert input (default is no)
             template: {string} html template
+            templateUrl: {string} The url of the template.
             popoverTemplate: {string} html template
+            popoverTemplateUrl: {string} The url of the popover template.
         ###
         if not @components[name]?
             # regist the new component
             newComponent = @convertComponent name, component
             @components[name] = newComponent
-            if newComponent.group not in @groups
-                @groups.push newComponent.group
+            @loadTemplate(newComponent) if $injector?
+            if newComponent.Group not in @groups
+                @groups.push newComponent.Group
         else
             console.error "The component #{name} was registered."
         return
@@ -147,10 +186,12 @@ a.provider '$builder', ->
             [OrderBy]: {int} The form object index. It will be updated by $builder.
         ###
         @forms[name] ?= []
+        @formsId[name] ?= 0
         if index > @forms[name].length then index = @forms[name].length
         else if index < 0 then index = 0
         @forms[name].splice index, 0, @convertFormObject(name, formObject)
         @reindexFormObject name
+        @forms[name][index]
 
     @removeFormObject = (name, index) =>
         ###
@@ -178,7 +219,11 @@ a.provider '$builder', ->
     # ----------------------------------------
     # $get
     # ----------------------------------------
-    @get = ->
+    @$get = ['$injector', ($injector) =>
+        @setupProviders($injector)
+        for name, component of @components
+            @loadTemplate component
+
         version: @version
         components: @components
         groups: @groups
@@ -189,5 +234,5 @@ a.provider '$builder', ->
         insertFormObject: @insertFormObject
         removeFormObject: @removeFormObject
         updateFormObjectIndex: @updateFormObjectIndex
-    @$get = @get
+    ]
     return

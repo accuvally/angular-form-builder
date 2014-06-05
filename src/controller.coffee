@@ -1,6 +1,6 @@
-
-a = angular.module 'builder.controller', ['builder.provider']
-
+# ----------------------------------------
+# Shared functions
+# ----------------------------------------
 copyObjectToScope = (object, scope) ->
     ###
     Copy object (ng-repeat="object in objects") to scope without `hashKey`.
@@ -12,9 +12,14 @@ copyObjectToScope = (object, scope) ->
 
 
 # ----------------------------------------
+# builder.controller
+# ----------------------------------------
+angular.module 'builder.controller', ['builder.provider']
+
+# ----------------------------------------
 # fbFormObjectEditableController
 # ----------------------------------------
-fbFormObjectEditableController = ($scope, $injector) ->
+.controller 'fbFormObjectEditableController', ['$scope', '$injector', ($scope, $injector) ->
     $builder = $injector.get '$builder'
 
     $scope.setupScope = (formObject) ->
@@ -39,11 +44,11 @@ fbFormObjectEditableController = ($scope, $injector) ->
         , yes
 
         $scope.$watch 'optionsText', (text) ->
-            $scope.Options = (x for x in text.split('\n') when x.length > 0)
+            $scope.options = (x for x in text.split('\n') when x.length > 0)
             $scope.inputText = $scope.Options[0]
 
         component = $builder.components[formObject.Component]
-        $scope.validationOptions = component.validationOptions
+        $scope.validationOptions = component.ValidationOptions
 
     $scope.data =
         model: null
@@ -69,15 +74,12 @@ fbFormObjectEditableController = ($scope, $injector) ->
             $scope.Required = @model.required
             $scope.optionsText = @model.optionsText
             $scope.Validation = @model.validation
-
-fbFormObjectEditableController.$inject = ['$scope', '$injector']
-a.controller 'fbFormObjectEditableController', fbFormObjectEditableController
-
+]
 
 # ----------------------------------------
 # fbComponentsController
 # ----------------------------------------
-fbComponentsController = ($scope, $injector) ->
+.controller 'fbComponentsController', ['$scope', '$injector', ($scope, $injector) ->
     # providers
     $builder = $injector.get '$builder'
 
@@ -93,31 +95,21 @@ fbComponentsController = ($scope, $injector) ->
     $scope.activeGroup = $scope.groups[0]
     $scope.allComponents = $builder.components
     $scope.$watch 'allComponents', -> $scope.selectGroup null, $scope.activeGroup
-
-fbComponentsController.$inject = ['$scope', '$injector']
-a.controller 'fbComponentsController', fbComponentsController
+]
 
 
 # ----------------------------------------
 # fbComponentController
 # ----------------------------------------
-fbComponentController = ($scope) ->
-    $scope.copyObjectToScope = (object) ->
-        copyObjectToScope object, $scope
-        $scope.Label = $scope.label
-        $scope.Description = $scope.description
-        $scope.Placeholder = $scope.placeholder
-        $scope.Options = $scope.options
-        $scope.Required = $scope.required
-
-fbComponentController.$inject = ['$scope']
-a.controller 'fbComponentController', fbComponentController
+.controller 'fbComponentController', ['$scope', ($scope) ->
+    $scope.copyObjectToScope = (object) -> copyObjectToScope object, $scope
+]
 
 
 # ----------------------------------------
 # fbFormController
 # ----------------------------------------
-fbFormController = ($scope, $injector) ->
+.controller 'fbFormController', ['$scope', '$injector', ($scope, $injector) ->
     # providers
     $builder = $injector.get '$builder'
     $timeout = $injector.get '$timeout'
@@ -128,18 +120,18 @@ fbFormController = ($scope, $injector) ->
         # remove superfluous input
         if $scope.input.length > $scope.form.length
             $scope.input.splice $scope.form.length
-        # tell children to update input value
-        $timeout -> $scope.$broadcast $builder.broadcastChannel.updateInput
+        # tell children to update input value.
+        # ! use $timeout for waiting $scope updated.
+        $timeout ->
+            $scope.$broadcast $builder.broadcastChannel.updateInput
     , yes
-
-fbFormController.$inject = ['$scope', '$injector']
-a.controller 'fbFormController', fbFormController
+]
 
 
 # ----------------------------------------
 # fbFormObjectController
 # ----------------------------------------
-fbFormObjectController = ($scope, $injector) ->
+.controller 'fbFormObjectController', ['$scope', '$injector', ($scope, $injector) ->
     # providers
     $builder = $injector.get '$builder'
 
@@ -155,6 +147,4 @@ fbFormObjectController = ($scope, $injector) ->
             Label: $scope.formObject.Label
             Value: value ? []
         $scope.$parent.input.splice $scope.$index, 1, input
-
-fbFormObjectController.$inject = ['$scope', '$injector']
-a.controller 'fbFormObjectController', fbFormObjectController
+]
