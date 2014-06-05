@@ -99,14 +99,13 @@ angular.module 'builder.directive', [
 
                 if not isHover and draggable.mode is 'drag'
                     # remove the form object by draggin out
-                    formObject = draggable.object.formObject7
+                    formObject = draggable.object.formObject
                     if formObject.Editable
                         $builder.removeFormObject attrs.fbBuilder, formObject.OrderBy
                 else if isHover
                     if draggable.mode is 'mirror'
                         # insert a form object
                         index = $(element).find('.empty').index('.fb-form-object-editable')
-                        console.log draggable
                         if index >= 0
                             $builder.insertFormObject scope.formName, $(element).find('.empty').index('.fb-form-object-editable'),
                                 Component: draggable.object.componentName
@@ -278,7 +277,7 @@ angular.module 'builder.directive', [
             </li>
         </ul>
         <div class='form-horizontal'>
-            <div class='fb-component' ng-repeat="component in allComponents"
+            <div class='fb-component' ng-repeat="component in components"
                 fb-component="component"></div>
         </div>
         """

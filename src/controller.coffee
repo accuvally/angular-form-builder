@@ -88,7 +88,7 @@ angular.module 'builder.controller', ['builder.provider']
         $event?.preventDefault()
         $scope.activeGroup = group
         $scope.components = []
-        for name, component of $builder.components when component.group is group
+        for name, component of $builder.components when component.Group is group
             $scope.components.push component
 
     $scope.groups = $builder.groups
