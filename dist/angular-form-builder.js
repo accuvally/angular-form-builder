@@ -193,7 +193,7 @@
           $(element).addClass('fb-builder');
           return $drag.droppable($(element), {
             move: function(e) {
-              var $empty, $formObject, $formObjects, height, index, offset, positions, _i, _j, _ref, _ref1;
+              var $empty, $formObject, $formObjects, height, index, offset, positionStart, positions, uneditableIndex, _i, _j, _k, _ref, _ref1, _ref2;
               if (beginMove) {
                 $("div.fb-form-object-editable").popover('hide');
                 beginMove = false;
@@ -214,7 +214,16 @@
                 positions.push(offset.top + height / 2);
               }
               positions.push(positions[positions.length - 1] + 1000);
-              for (index = _j = 1, _ref1 = positions.length; _j < _ref1; index = _j += 1) {
+              uneditableIndex = -1;
+              for (index = _j = _ref1 = scope.formObjects.length - 1; _j >= 0; index = _j += -1) {
+                if (!(!scope.formObjects[index].Editable)) {
+                  continue;
+                }
+                uneditableIndex = index;
+                break;
+              }
+              positionStart = uneditableIndex >= 0 ? uneditableIndex + 2 : 1;
+              for (index = _k = positionStart, _ref2 = positions.length; _k < _ref2; index = _k += 1) {
                 if (e.pageY > positions[index - 1] && e.pageY <= positions[index]) {
                   $(element).find('.empty').remove();
                   $empty = $("<div class='fb-form-object-editable empty'></div>");
@@ -299,12 +308,13 @@
           $(element).on('click', function() {
             return false;
           });
-          $drag.draggable($(element), {
-            object: {
-              formObject: scope.formObject
-            }
-          });
-          if (!scope.formObject.Editable) {
+          if (scope.formObject.Editable) {
+            $drag.draggable($(element), {
+              object: {
+                formObject: scope.formObject
+              }
+            });
+          } else {
             return;
           }
           popover = {};
