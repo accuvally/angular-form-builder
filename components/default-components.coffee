@@ -249,7 +249,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Options</label>
-                    <textarea class="form-control" rows="3" ng-model="optionsText"/>
+                    <textarea class="form-control" rows="3" ng-model="OptionsText"/>
                 </div>
 
                 <hr/>

@@ -85,7 +85,7 @@ angular.module 'builder.provider', []
                 formObject.IdNumber = @formsId[name]++
                 exist = yes
                 break
-            @formsId[name] = formObject.IdNumbers + 1 if not exist
+            @formsId[name] = formObject.IdNumber + 1 if not exist
 
         result =
             IdNumber: formObject.IdNumber ? @formsId[name]++
