@@ -131,7 +131,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                             {{item}}
                         </label>
                     </div>
-                    <p class='help-block'>{{description}}</p>
+                    <p class='help-block'>{{Description}}</p>
                 </div>
             </div>
             """
@@ -148,7 +148,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Options</label>
-                    <textarea class="form-control" rows="3" ng-model="optionsText"/>
+                    <textarea class="form-control" rows="3" ng-model="OptionsText"/>
                 </div>
                 <div class="checkbox">
                     <label>
@@ -203,7 +203,7 @@ angular.module 'builder.components', ['builder', 'validator.rules']
                 </div>
                 <div class="form-group">
                     <label class='control-label'>Options</label>
-                    <textarea class="form-control" rows="3" ng-model="optionsText"/>
+                    <textarea class="form-control" rows="3" ng-model="OptionsText"/>
                 </div>
 
                 <hr/>

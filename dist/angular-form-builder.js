@@ -30,7 +30,7 @@
          */
         var component;
         copyObjectToScope(formObject, $scope);
-        $scope.optionsText = formObject.Options.join('\n');
+        $scope.OptionsText = formObject.Options.join('\n');
         $scope.$watch('[Label, Description, Placeholder, Required, Options, Validation]', function() {
           formObject.Label = $scope.Label;
           formObject.Description = $scope.Description;
@@ -39,9 +39,9 @@
           formObject.Options = $scope.Options;
           return formObject.Validation = $scope.Validation;
         }, true);
-        $scope.$watch('optionsText', function(text) {
+        $scope.$watch('OptionsText', function(text) {
           var x;
-          $scope.options = (function() {
+          $scope.Options = (function() {
             var _i, _len, _ref, _results;
             _ref = text.split('\n');
             _results = [];
@@ -70,7 +70,7 @@
             description: $scope.Description,
             placeholder: $scope.Placeholder,
             required: $scope.Required,
-            optionsText: $scope.optionsText,
+            optionsText: $scope.OptionsText,
             validation: $scope.Validation
           };
         },
@@ -86,7 +86,7 @@
           $scope.Description = this.model.description;
           $scope.Placeholder = this.model.placeholder;
           $scope.Required = this.model.required;
-          $scope.optionsText = this.model.optionsText;
+          $scope.OptionsText = this.model.optionsText;
           return $scope.Validation = this.model.validation;
         }
       };
@@ -159,7 +159,7 @@
         input = {
           IdNumber: $scope.formObject.IdNumber,
           Label: $scope.formObject.Label,
-          Value: value != null ? value : []
+          Value: value != null ? value : ''
         };
         return $scope.$parent.input.splice($scope.$index, 1, input);
       };
@@ -494,7 +494,7 @@
           scope.$on($builder.broadcastChannel.updateInput, function() {
             return scope.updateInput(scope.inputText);
           });
-          if (scope.$component.arrayToText) {
+          if (scope.$component.ArrayToText) {
             scope.inputArray = [];
             scope.$watch('inputArray', function(newValue, oldValue) {
               var checked, index;
@@ -552,14 +552,14 @@
             view = $compile($template)(scope);
             return $(element).html(view);
           });
-          if (!scope.$component.arrayToText && scope.formObject.Options.length > 0) {
+          if (!scope.$component.ArrayToText && scope.formObject.Options.length > 0) {
             scope.inputText = scope.formObject.Options[0];
           }
           return scope.$watch("default[" + scope.formObject.id + "]", function(value) {
             if (!value) {
               return;
             }
-            if (scope.$component.arrayToText) {
+            if (scope.$component.ArrayToText) {
               return scope.inputArray = value;
             } else {
               return scope.inputText = value;

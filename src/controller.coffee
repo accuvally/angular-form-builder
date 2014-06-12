@@ -32,7 +32,7 @@ angular.module 'builder.controller', ['builder.provider']
         ###
         copyObjectToScope formObject, $scope
 
-        $scope.optionsText = formObject.Options.join '\n'
+        $scope.OptionsText = formObject.Options.join '\n'
 
         $scope.$watch '[Label, Description, Placeholder, Required, Options, Validation]', ->
             formObject.Label = $scope.Label
@@ -43,8 +43,8 @@ angular.module 'builder.controller', ['builder.provider']
             formObject.Validation = $scope.Validation
         , yes
 
-        $scope.$watch 'optionsText', (text) ->
-            $scope.options = (x for x in text.split('\n') when x.length > 0)
+        $scope.$watch 'OptionsText', (text) ->
+            $scope.Options = (x for x in text.split('\n') when x.length > 0)
             $scope.inputText = $scope.Options[0]
 
         component = $builder.components[formObject.Component]
@@ -61,7 +61,7 @@ angular.module 'builder.controller', ['builder.provider']
                 description: $scope.Description
                 placeholder: $scope.Placeholder
                 required: $scope.Required
-                optionsText: $scope.optionsText
+                optionsText: $scope.OptionsText
                 validation: $scope.Validation
         rollback: ->
             ###
@@ -72,7 +72,7 @@ angular.module 'builder.controller', ['builder.provider']
             $scope.Description = @model.description
             $scope.Placeholder = @model.placeholder
             $scope.Required = @model.required
-            $scope.optionsText = @model.optionsText
+            $scope.OptionsText = @model.optionsText
             $scope.Validation = @model.validation
 ]
 
@@ -145,6 +145,6 @@ angular.module 'builder.controller', ['builder.provider']
         input =
             IdNumber: $scope.formObject.IdNumber
             Label: $scope.formObject.Label
-            Value: value ? []
+            Value: value ? ''
         $scope.$parent.input.splice $scope.$index, 1, input
 ]
