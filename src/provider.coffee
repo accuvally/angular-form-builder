@@ -79,6 +79,10 @@ angular.module 'builder.provider', []
         component = @components[formObject.Component]
         throw "The component #{formObject.Component} was not registered." if not component?
 
+        ###注意
+        angular-form-builder 用的 IdNumber 為 0 1 2 3 4 5
+        但 Accupass 專案使用 guid, 新的欄位使用 "" 讓後端知道是新的，舊的欄位則保持原本的 IdNumber
+
         if formObject.IdNumber
             exist = no
             for form in @forms[name] when formObject.IdNumber <= form.IdNumber# less and equal
@@ -86,9 +90,9 @@ angular.module 'builder.provider', []
                 exist = yes
                 break
             @formsId[name] = formObject.IdNumber + 1 if not exist
-
+        ###
         result =
-            IdNumber: formObject.IdNumber ? @formsId[name]++
+            IdNumber: formObject.IdNumber ? ''
             Component: formObject.Component
             Editable: formObject.Editable ? component.Editable
             OrderBy: formObject.OrderBy ? 0

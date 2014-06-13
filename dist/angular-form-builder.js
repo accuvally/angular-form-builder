@@ -1053,7 +1053,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, exist, form, result, _i, _len, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
       if (formObject == null) {
         formObject = {};
       }
@@ -1062,33 +1062,30 @@
       if (component == null) {
         throw "The component " + formObject.Component + " was not registered.";
       }
-      if (formObject.IdNumber) {
-        exist = false;
-        _ref = this.forms[name];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          form = _ref[_i];
-          if (!(formObject.IdNumber <= form.IdNumber)) {
-            continue;
-          }
-          formObject.IdNumber = this.formsId[name]++;
-          exist = true;
-          break;
-        }
-        if (!exist) {
-          this.formsId[name] = formObject.IdNumber + 1;
-        }
-      }
+
+      /*注意
+      angular-form-builder 用的 IdNumber 為 0 1 2 3 4 5
+      但 Accupass 專案使用 guid, 新的欄位使用 "" 讓後端知道是新的，舊的欄位則保持原本的 IdNumber
+      
+      if formObject.IdNumber
+          exist = no
+          for form in @forms[name] when formObject.IdNumber <= form.IdNumber# less and equal
+              formObject.IdNumber = @formsId[name]++
+              exist = yes
+              break
+          @formsId[name] = formObject.IdNumber + 1 if not exist
+       */
       result = {
-        IdNumber: (_ref1 = formObject.IdNumber) != null ? _ref1 : this.formsId[name]++,
+        IdNumber: (_ref = formObject.IdNumber) != null ? _ref : '',
         Component: formObject.Component,
-        Editable: (_ref2 = formObject.Editable) != null ? _ref2 : component.Editable,
-        OrderBy: (_ref3 = formObject.OrderBy) != null ? _ref3 : 0,
-        Label: (_ref4 = formObject.Label) != null ? _ref4 : component.Label,
-        Description: (_ref5 = formObject.Description) != null ? _ref5 : component.Description,
-        Placeholder: (_ref6 = formObject.Placeholder) != null ? _ref6 : component.Placeholder,
-        Options: (_ref7 = formObject.Options) != null ? _ref7 : component.Options,
-        Required: (_ref8 = formObject.Required) != null ? _ref8 : component.Required,
-        Validation: (_ref9 = formObject.Validation) != null ? _ref9 : component.Validation
+        Editable: (_ref1 = formObject.Editable) != null ? _ref1 : component.Editable,
+        OrderBy: (_ref2 = formObject.OrderBy) != null ? _ref2 : 0,
+        Label: (_ref3 = formObject.Label) != null ? _ref3 : component.Label,
+        Description: (_ref4 = formObject.Description) != null ? _ref4 : component.Description,
+        Placeholder: (_ref5 = formObject.Placeholder) != null ? _ref5 : component.Placeholder,
+        Options: (_ref6 = formObject.Options) != null ? _ref6 : component.Options,
+        Required: (_ref7 = formObject.Required) != null ? _ref7 : component.Required,
+        Validation: (_ref8 = formObject.Validation) != null ? _ref8 : component.Validation
       };
       return result;
     };
