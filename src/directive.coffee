@@ -174,7 +174,7 @@ angular.module 'builder.directive', [
             $(element).addClass popover.id
             $(element).popover
                 html: yes
-                title: scope.$component.label
+                title: scope.$component.Label
                 content: popover.view
                 container: 'body'
         scope.popover =
@@ -193,7 +193,7 @@ angular.module 'builder.directive', [
                 ###
                 $event.preventDefault()
 
-                $builder.removeFormObject scope.$parent.formName, scope.$index
+                $builder.removeFormObject scope.$parent.formName, scope.$parent.$index
                 $(element).popover 'hide'
                 return
             shown: ->
