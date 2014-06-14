@@ -368,9 +368,24 @@ angular.module 'builder.directive', [
                 checked = []
                 for index of scope.inputArray when scope.inputArray[index]
                     checked.push scope.Options[index]
-                scope.inputText = checked.join ','
+                scope.updateInput checked
+                # scope.inputText = checked.join ','
             , yes
-        scope.$watch 'inputText', -> scope.updateInput scope.inputText
+            scope.$parent.$watch "input[#{scope.$index}].Value", (value) ->
+                if value
+                    scope.inputText = value[0] if value.length is 1 and value[0]
+                    optionsLength = if scope.Options then scope.Options.length else 0
+                    for index in [0...optionsLength] by 1
+                      scope.inputArray[index] = scope.Options[index] in value
+            , yes
+        else
+            scope.$parent.$watch "input[#{scope.$index}].Value", (newValue, oldValue) ->
+                return if newValue is oldValue
+                if newValue and newValue[0]
+                    scope.inputText = newValue[0]
+            , yes
+        scope.$watch 'inputText', (value) -> scope.updateInput [value]
+        # scope.$watch 'inputText', -> scope.updateInput scope.inputText
         # watch (management updated form objects
         scope.$watch attrs.fbFormObject, ->
             scope.copyObjectToScope scope.formObject

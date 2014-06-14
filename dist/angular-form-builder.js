@@ -169,6 +169,8 @@
 }).call(this);
 
 (function() {
+  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
   angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']).directive('fbBuilder', [
     '$injector', function($injector) {
       var $builder, $drag;
@@ -515,11 +517,34 @@
                   checked.push(scope.Options[index]);
                 }
               }
-              return scope.inputText = checked.join(',');
+              return scope.updateInput(checked);
+            }, true);
+            scope.$parent.$watch("input[" + scope.$index + "].Value", function(value) {
+              var index, optionsLength, _i, _ref, _results;
+              if (value) {
+                if (value.length === 1 && value[0]) {
+                  scope.inputText = value[0];
+                }
+                optionsLength = scope.Options ? scope.Options.length : 0;
+                _results = [];
+                for (index = _i = 0; _i < optionsLength; index = _i += 1) {
+                  _results.push(scope.inputArray[index] = (_ref = scope.Options[index], __indexOf.call(value, _ref) >= 0));
+                }
+                return _results;
+              }
+            }, true);
+          } else {
+            scope.$parent.$watch("input[" + scope.$index + "].Value", function(newValue, oldValue) {
+              if (newValue === oldValue) {
+                return;
+              }
+              if (newValue && newValue[0]) {
+                return scope.inputText = newValue[0];
+              }
             }, true);
           }
-          scope.$watch('inputText', function() {
-            return scope.updateInput(scope.inputText);
+          scope.$watch('inputText', function(value) {
+            return scope.updateInput([value]);
           });
           scope.$watch(attrs.fbFormObject, function() {
             return scope.copyObjectToScope(scope.formObject);
