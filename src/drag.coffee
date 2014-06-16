@@ -29,14 +29,18 @@ angular.module 'builder.drag', []
         up: {}
     @eventMouseMove = ->
     @eventMouseUp = ->
+    @mouseMoveTimes = 0;
     $ =>
         $(document).on 'mousedown', (e) =>
+            @mouseMoveTimes = 0
             @mouseMoved = no
             func(e) for key, func of @hooks.down
             return
         $(document).on 'mousemove', (e) =>
-            @mouseMoved = yes
-            func(e) for key, func of @hooks.move
+            @mouseMoveTimes++
+            if @mouseMoveTimes >= 8
+              @mouseMoved = yes
+              func(e) for key, func of @hooks.move
             return
         $(document).on 'mouseup', (e) =>
             func(e) for key, func of @hooks.up

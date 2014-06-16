@@ -604,10 +604,12 @@
     };
     this.eventMouseMove = function() {};
     this.eventMouseUp = function() {};
+    this.mouseMoveTimes = 0;
     $((function(_this) {
       return function() {
         $(document).on('mousedown', function(e) {
           var func, key, _ref;
+          _this.mouseMoveTimes = 0;
           _this.mouseMoved = false;
           _ref = _this.hooks.down;
           for (key in _ref) {
@@ -617,11 +619,15 @@
         });
         $(document).on('mousemove', function(e) {
           var func, key, _ref;
-          _this.mouseMoved = true;
-          _ref = _this.hooks.move;
-          for (key in _ref) {
-            func = _ref[key];
-            func(e);
+          _this.mouseMoveTimes++;
+          console.log(_this.mouseMoveTimes);
+          if (_this.mouseMoveTimes >= 8) {
+            _this.mouseMoved = true;
+            _ref = _this.hooks.move;
+            for (key in _ref) {
+              func = _ref[key];
+              func(e);
+            }
           }
         });
         return $(document).on('mouseup', function(e) {
