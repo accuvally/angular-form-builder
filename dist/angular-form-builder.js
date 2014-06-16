@@ -620,7 +620,6 @@
         $(document).on('mousemove', function(e) {
           var func, key, _ref;
           _this.mouseMoveTimes++;
-          console.log(_this.mouseMoveTimes);
           if (_this.mouseMoveTimes >= 8) {
             _this.mouseMoved = true;
             _ref = _this.hooks.move;
