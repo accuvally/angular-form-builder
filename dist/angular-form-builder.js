@@ -1016,7 +1016,17 @@
  */
 
 (function() {
-  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  var extend,
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  extend = function(object, properties) {
+    var key, val;
+    for (key in properties) {
+      val = properties[key];
+      object[key] = val;
+    }
+    return object;
+  };
 
   angular.module('builder.provider', []).provider('$builder', function() {
     var $http, $injector, $templateCache;
@@ -1196,6 +1206,31 @@
         }
       };
     })(this);
+    this.addComponent = (function(_this) {
+      return function(name, baseComponent, component) {
+        var newComponent, _ref;
+        if (component == null) {
+          component = {};
+        }
+
+        /*
+        Add the component for form-builder.
+        @param name: The component name.
+        @param baseComponent: the component you use in registerComponent
+        @param component: The component object. (same as registerComponent)
+         */
+        if (_this.components[name] == null) {
+          newComponent = _this.convertComponent(name, _this.bleach.toLowerCase(_this.components[baseComponent]));
+          extend(newComponent, component);
+          _this.components[name] = _this.bleach.toUpperCase(newComponent);
+          if (_ref = newComponent.group, __indexOf.call(_this.groups, _ref) < 0) {
+            _this.groups.push(newComponent.group);
+          }
+        } else {
+          console.error("The component " + name + " was registered.");
+        }
+      };
+    })(this);
     this.addFormObject = (function(_this) {
       return function(name, formObject) {
         var _base;
@@ -1302,6 +1337,7 @@
             broadcastChannel: _this.broadcastChannel,
             registerComponent: _this.registerComponent,
             addFormObject: _this.addFormObject,
+            addComponent: _this.addComponent,
             insertFormObject: _this.insertFormObject,
             removeFormObject: _this.removeFormObject,
             updateFormObjectIndex: _this.updateFormObjectIndex

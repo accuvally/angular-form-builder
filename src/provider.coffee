@@ -10,6 +10,10 @@
         This is for end-user. There are form groups int the form.
         They can input the value to the form.
 ###
+extend = (object, properties) ->
+    for key, val of properties
+        object[key] = val
+    object
 
 angular.module 'builder.provider', []
 
@@ -165,6 +169,23 @@ angular.module 'builder.provider', []
             console.error "The component #{name} was registered."
         return
 
+    @addComponent = (name, baseComponent, component={}) =>
+        ###
+        Add the component for form-builder.
+        @param name: The component name.
+        @param baseComponent: the component you use in registerComponent
+        @param component: The component object. (same as registerComponent)
+        ###
+        if not @components[name]?
+          newComponent = @convertComponent name, @bleach.toLowerCase(@components[baseComponent])
+          extend newComponent, component
+          @components[name] = @bleach.toUpperCase(newComponent)
+          if newComponent.group not in @groups
+            @groups.push newComponent.group
+        else
+            console.error "The component #{name} was registered."
+        return
+
     @addFormObject = (name, formObject={}) =>
         ###
         Insert the form object into the form at last.
@@ -235,6 +256,7 @@ angular.module 'builder.provider', []
         broadcastChannel: @broadcastChannel
         registerComponent: @registerComponent
         addFormObject: @addFormObject
+        addComponent: @addComponent
         insertFormObject: @insertFormObject
         removeFormObject: @removeFormObject
         updateFormObjectIndex: @updateFormObjectIndex
