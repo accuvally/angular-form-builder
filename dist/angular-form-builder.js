@@ -521,7 +521,7 @@
             }, true);
             scope.$parent.$watch("input[" + scope.$index + "].Value", function(value) {
               var index, optionsLength, _i, _ref, _results;
-              if (value) {
+              if (value.length > 0) {
                 if (value.length === 1 && value[0]) {
                   scope.inputText = value[0];
                 }
@@ -531,6 +531,8 @@
                   _results.push(scope.inputArray[index] = (_ref = scope.Options[index], __indexOf.call(value, _ref) >= 0));
                 }
                 return _results;
+              } else {
+                return scope.inputText = "";
               }
             }, true);
           } else {
