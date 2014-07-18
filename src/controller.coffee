@@ -145,6 +145,6 @@ angular.module 'builder.controller', ['builder.provider']
         input =
             IdNumber: $scope.formObject.IdNumber
             Label: $scope.formObject.Label
-            Value: value ? ''
+            Value: value ? []
         $scope.$parent.input.splice $scope.$index, 1, input
 ]

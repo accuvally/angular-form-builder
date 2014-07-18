@@ -159,7 +159,7 @@
         input = {
           IdNumber: $scope.formObject.IdNumber,
           Label: $scope.formObject.Label,
-          Value: value != null ? value : ''
+          Value: value != null ? value : []
         };
         return $scope.$parent.input.splice($scope.$index, 1, input);
       };
@@ -538,8 +538,10 @@
               if (newValue === oldValue) {
                 return;
               }
-              if (newValue && newValue[0]) {
+              if (angular.isArray(newValue)) {
                 return scope.inputText = newValue[0];
+              } else {
+                return scope.inputText = newValue;
               }
             }, true);
           }
@@ -563,7 +565,7 @@
             return $(element).html(view);
           });
           if (!scope.$component.ArrayToText && scope.formObject.Options.length > 0) {
-            scope.inputText = scope.formObject.Options[0];
+            scope.inputText = [scope.formObject.Options[0]];
           }
           return scope.$watch("default[" + scope.formObject.IdNumber + "]", function(value) {
             if (!value) {

@@ -381,8 +381,12 @@ angular.module 'builder.directive', [
         else
             scope.$parent.$watch "input[#{scope.$index}].Value", (newValue, oldValue) ->
                 return if newValue is oldValue
-                if newValue and newValue[0]
+                if angular.isArray(newValue)
                     scope.inputText = newValue[0]
+                else
+                    scope.inputText = newValue
+
+
             , yes
         scope.$watch 'inputText', (value) -> scope.updateInput [value]
         # scope.$watch 'inputText', -> scope.updateInput scope.inputText
@@ -404,7 +408,7 @@ angular.module 'builder.directive', [
 
         # select the first option
         if not scope.$component.ArrayToText and scope.formObject.Options.length > 0
-            scope.inputText = scope.formObject.Options[0]
+            scope.inputText = [scope.formObject.Options[0]]
 
         # set default value
         scope.$watch "default[#{scope.formObject.IdNumber}]", (value) ->
