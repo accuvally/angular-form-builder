@@ -1070,7 +1070,7 @@
       }
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         Name: name,
         Group: (_ref = component.group) != null ? _ref : 'Default',
@@ -1086,7 +1086,8 @@
         Template: component.template,
         TemplateUrl: component.templateUrl,
         PopoverTemplate: component.popoverTemplate,
-        PopoverTemplateUrl: component.popoverTemplateUrl
+        PopoverTemplateUrl: component.popoverTemplateUrl,
+        InsertCallback: (_ref10 = component.insertCallback) != null ? _ref10 : void 0
       };
       if (!result.Template && !result.TemplateUrl) {
         console.error("The template is empty.");
@@ -1097,7 +1098,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (formObject == null) {
         formObject = {};
       }
@@ -1129,7 +1130,8 @@
         Placeholder: (_ref5 = formObject.Placeholder) != null ? _ref5 : component.Placeholder,
         Options: (_ref6 = formObject.Options) != null ? _ref6 : component.Options,
         Required: (_ref7 = formObject.Required) != null ? _ref7 : component.Required,
-        Validation: (_ref8 = formObject.Validation) != null ? _ref8 : component.Validation
+        Validation: (_ref8 = formObject.Validation) != null ? _ref8 : component.Validation,
+        InsertCallback: (_ref9 = formObject.InsertCallback) != null ? _ref9 : component.InsertCallback
       };
       return result;
     };
@@ -1287,6 +1289,9 @@
         }
         _this.forms[name].splice(index, 0, _this.convertFormObject(name, formObject));
         _this.reindexFormObject(name);
+        if (_this.forms[name][index].InsertCallback) {
+          _this.forms[name][index].InsertCallback();
+        }
         return _this.forms[name][index];
       };
     })(this);
