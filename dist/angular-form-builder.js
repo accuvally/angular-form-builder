@@ -1290,7 +1290,7 @@
         _this.forms[name].splice(index, 0, _this.convertFormObject(name, formObject));
         _this.reindexFormObject(name);
         if (_this.forms[name][index].InsertCallback) {
-          _this.forms[name][index].InsertCallback();
+          _this.forms[name][index].InsertCallback(index);
         }
         return _this.forms[name][index];
       };
