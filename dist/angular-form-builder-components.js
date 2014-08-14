@@ -82,21 +82,6 @@
         insertCallback: function() {
           return alert('you trigger a callback insert event');
         },
-        validationOptions: [
-          {
-            label: 'none',
-            rule: '/.*/'
-          }, {
-            label: 'number',
-            rule: '[number]'
-          }, {
-            label: 'email',
-            rule: '[email]'
-          }, {
-            label: 'url',
-            rule: '[url]'
-          }
-        ],
         template: "<div class=\"form-group\">\n    <label for=\"{{formName+OrderBy}}\" class=\"col-md-4 control-label\" ng-class=\"{'fb-required':Required}\">{{Label}}</label>\n    <div class=\"col-md-8\">\n        <input type=\"text\" ng-model=\"inputText\" validator-required=\"{{Required}}\" validator-group=\"{{formName}}\" id=\"{{formName+OrderBy}}\" class=\"form-control\" placeholder=\"{{Placeholder}}\"/>\n        <p class='help-block'>{{Description}}</p>\n    </div>\n</div>",
         popoverTemplate: "<form>\n    <div class=\"form-group\">\n        <label class='control-label'>Label</label>\n        <input type='text' ng-model=\"Label\" validator=\"[required]\" class='form-control'/>\n    </div>\n    <div class=\"form-group\">\n        <label class='control-label'>Description</label>\n        <input type='text' ng-model=\"Description\" class='form-control'/>\n    </div>\n    <div class=\"form-group\">\n        <label class='control-label'>Placeholder</label>\n        <input type='text' ng-model=\"Placeholder\" class='form-control'/>\n    </div>\n    <div class=\"checkbox\">\n        <label>\n            <input type='checkbox' ng-model=\"Required\" />\n            Required</label>\n    </div>\n    <div class=\"form-group\" ng-if=\"validationOptions.length > 0\">\n        <label class='control-label'>Validation</label>\n        <select ng-model=\"$parent.Validation\" class='form-control' ng-options=\"option.rule as option.label for option in validationOptions\"></select>\n    </div>\n\n    <hr/>\n    <div class='form-group'>\n        <input type='submit' ng-click=\"popover.save($event)\" class='btn btn-primary' value='Save'/>\n        <input type='button' ng-click=\"popover.cancel($event)\" class='btn btn-default' value='Cancel'/>\n        <input type='button' ng-click=\"popover.remove($event)\" class='btn btn-danger' value='Delete'/>\n    </div>\n</form>"
       });

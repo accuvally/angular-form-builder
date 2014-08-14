@@ -244,7 +244,7 @@
               return $(element).find('.empty').remove();
             },
             up: function(e, isHover, draggable) {
-              var formObject, index, newIndex, oldIndex;
+              var formObject, index, insertIndex, newIndex, oldIndex;
               beginMove = true;
               if (!$drag.isMouseMoved()) {
                 $(element).find('.empty').remove();
@@ -259,9 +259,13 @@
                 if (draggable.mode === 'mirror') {
                   index = $(element).find('.empty').index('.fb-form-object-editable');
                   if (index >= 0) {
-                    $builder.insertFormObject(scope.formName, $(element).find('.empty').index('.fb-form-object-editable'), {
+                    insertIndex = $(element).find('.empty').index('.fb-form-object-editable');
+                    $builder.insertFormObject(scope.formName, insertIndex, {
                       Component: draggable.object.componentName
                     });
+                    if ($builder.components[draggable.object.componentName]['InsertCallback']) {
+                      $builder.components[draggable.object.componentName]['InsertCallback'](insertIndex);
+                    }
                   }
                 }
                 if (draggable.mode === 'drag') {
@@ -1289,9 +1293,6 @@
         }
         _this.forms[name].splice(index, 0, _this.convertFormObject(name, formObject));
         _this.reindexFormObject(name);
-        if (_this.forms[name][index].InsertCallback) {
-          _this.forms[name][index].InsertCallback(index);
-        }
         return _this.forms[name][index];
       };
     })(this);

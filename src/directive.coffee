@@ -105,8 +105,10 @@ angular.module 'builder.directive', [
                         # insert a form object
                         index = $(element).find('.empty').index('.fb-form-object-editable')
                         if index >= 0
-                            $builder.insertFormObject scope.formName, $(element).find('.empty').index('.fb-form-object-editable'),
+                            insertIndex = $(element).find('.empty').index('.fb-form-object-editable')
+                            $builder.insertFormObject scope.formName, insertIndex,
                                 Component: draggable.object.componentName
+                            if $builder.components[draggable.object.componentName]['InsertCallback'] then $builder.components[draggable.object.componentName]['InsertCallback'](insertIndex)
                     if draggable.mode is 'drag'
                         # update the index of form objects
                         oldIndex = draggable.object.formObject.OrderBy

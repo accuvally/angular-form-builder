@@ -218,7 +218,6 @@ angular.module 'builder.provider', []
         else if index < 0 then index = 0
         @forms[name].splice index, 0, @convertFormObject(name, formObject)
         @reindexFormObject name
-        if @forms[name][index].InsertCallback then @forms[name][index].InsertCallback(index)
         @forms[name][index]
 
     @removeFormObject = (name, index) =>
