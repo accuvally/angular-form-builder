@@ -169,8 +169,6 @@
 }).call(this);
 
 (function() {
-  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
   angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']).directive('fbBuilder', [
     '$injector', function($injector) {
       var $builder, $drag;
@@ -516,38 +514,19 @@
                 return;
               }
               checked = [];
+              console.log(scope);
               for (index in scope.inputArray) {
                 if (scope.inputArray[index]) {
                   checked.push((_ref = scope.Options[index]) != null ? _ref : scope.inputArray[index]);
                 }
               }
-              return scope.updateInput(checked);
-            }, true);
-            scope.$parent.$watch("input[" + scope.$index + "].Value", function(value) {
-              var index, optionsLength, _i, _ref, _results;
-              if (value.length > 0) {
-                if (value.length === 1 && value[0]) {
-                  scope.inputText = value[0];
+              scope.updateInput(checked);
+              if (checked.length > 0) {
+                if (checked.length === 1 && checked[0]) {
+                  return scope.inputText = checked[0];
                 }
-                optionsLength = scope.Options ? scope.Options.length : 0;
-                _results = [];
-                for (index = _i = 0; _i < optionsLength; index = _i += 1) {
-                  _results.push(scope.inputArray[index] = (_ref = scope.Options[index], __indexOf.call(value, _ref) >= 0));
-                }
-                return _results;
               } else {
                 return scope.inputText = "";
-              }
-            }, true);
-          } else {
-            scope.$parent.$watch("input[" + scope.$index + "].Value", function(newValue, oldValue) {
-              if (newValue === oldValue) {
-                return;
-              }
-              if (angular.isArray(newValue)) {
-                return scope.inputText = newValue[0];
-              } else {
-                return scope.inputText = newValue;
               }
             }, true);
           }

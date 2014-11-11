@@ -368,28 +368,28 @@ angular.module 'builder.directive', [
                 # array input, like checkbox
                 return if newValue is oldValue
                 checked = []
+                # console.log scope
                 for index of scope.inputArray when scope.inputArray[index]
                     checked.push scope.Options[index] ? scope.inputArray[index]
                 scope.updateInput checked
                 # scope.inputText = checked.join ','
-            , yes
-            scope.$parent.$watch "input[#{scope.$index}].Value", (value) ->
-                if value.length > 0
-                    scope.inputText = value[0] if value.length is 1 and value[0]
-                    optionsLength = if scope.Options then scope.Options.length else 0
-                    for index in [0...optionsLength] by 1
-                      scope.inputArray[index] = scope.Options[index] in value
+                if checked.length > 0
+                    scope.inputText = checked[0] if checked.length is 1 and checked[0]
+                    # optionsLength = if scope.Options then scope.Options.length else 0
+                    # for index in [0...optionsLength] by 1
+                    #   scope.inputArray[index] = scope.Options[index] in value
                 else
                     scope.inputText = ""
             , yes
-        else
-            scope.$parent.$watch "input[#{scope.$index}].Value", (newValue, oldValue) ->
-                return if newValue is oldValue
-                if angular.isArray(newValue)
-                    scope.inputText = newValue[0]
-                else
-                    scope.inputText = newValue
-            , yes
+           
+        # else
+        #     scope.$parent.$watch "input[#{scope.$index}].Value", (newValue, oldValue) ->
+        #         return if newValue is oldValue
+        #         if angular.isArray(newValue)
+        #             scope.inputText = newValue[0]
+        #         else
+        #             scope.inputText = newValue
+        #     , yes
         scope.$watch 'inputText', (value) -> scope.updateInput [value]
         # scope.$watch 'inputText', -> scope.updateInput scope.inputText
         # watch (management updated form objects
