@@ -127,12 +127,26 @@
     }
   ]).controller('fbFormController', [
     '$scope', '$injector', function($scope, $injector) {
-      var $builder, $timeout;
+      var $builder, $timeout, loadData;
       $builder = $injector.get('$builder');
       $timeout = $injector.get('$timeout');
       if ($scope.input == null) {
         $scope.input = [];
       }
+      loadData = $scope.$watch('input', function() {
+        var index, _i, _ref, _results;
+        if ($scope.input.length > 0) {
+          if (!($scope.input[0].IdNumber === "")) {
+            _results = [];
+            for (index = _i = 0, _ref = $scope.input.length; _i < _ref; index = _i += 1) {
+              _results.push($scope.form[index].inputText = $scope.input[index].Value[0]);
+            }
+            return _results;
+          } else {
+            return loadData();
+          }
+        }
+      }, true);
       return $scope.$watch('form', function() {
         if ($scope.input.length > $scope.form.length) {
           $scope.input.splice($scope.form.length);
@@ -509,16 +523,13 @@
           if (scope.$component.ArrayToText) {
             scope.inputArray = [];
             scope.$watch('inputArray', function(newValue, oldValue) {
-              var checked, index, _ref;
+              var checked, index, _i, _ref, _ref1;
               if (newValue === oldValue) {
                 return;
               }
               checked = [];
-              console.log(scope);
-              for (index in scope.inputArray) {
-                if (scope.inputArray[index]) {
-                  checked.push((_ref = scope.Options[index]) != null ? _ref : scope.inputArray[index]);
-                }
+              for (index = _i = 0, _ref = scope.inputArray.length; _i < _ref; index = _i += 1) {
+                checked.push((_ref1 = scope.Options[index]) != null ? _ref1 : scope.inputArray[index]);
               }
               scope.updateInput(checked);
               if (checked.length > 0) {

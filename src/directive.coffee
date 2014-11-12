@@ -369,7 +369,7 @@ angular.module 'builder.directive', [
                 return if newValue is oldValue
                 checked = []
                 # console.log scope
-                for index of scope.inputArray when scope.inputArray[index]
+                for index in [0...scope.inputArray.length] by 1
                     checked.push scope.Options[index] ? scope.inputArray[index]
                 scope.updateInput checked
                 # scope.inputText = checked.join ','
@@ -381,7 +381,6 @@ angular.module 'builder.directive', [
                 else
                     scope.inputText = ""
             , yes
-           
         # else
         #     scope.$parent.$watch "input[#{scope.$index}].Value", (newValue, oldValue) ->
         #         return if newValue is oldValue
@@ -390,7 +389,8 @@ angular.module 'builder.directive', [
         #         else
         #             scope.inputText = newValue
         #     , yes
-        scope.$watch 'inputText', (value) -> scope.updateInput [value]
+        scope.$watch 'inputText', (value) -> 
+            scope.updateInput [value]
         # scope.$watch 'inputText', -> scope.updateInput scope.inputText
         # watch (management updated form objects
         scope.$watch attrs.fbFormObject, ->
