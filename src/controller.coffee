@@ -117,13 +117,12 @@ angular.module 'builder.controller', ['builder.provider']
     # set default for input
     $scope.input ?= []
 
-    loadData = $scope.$watch 'input', ->
+    $scope.$watch 'input', ->
         if $scope.input.length > 0
-            if not ($scope.input[0].IdNumber is "")
+            console.log $scope.input
+            if $scope.input[0].insert
                 for index in [0...$scope.input.length] by 1
                     $scope.form[index].inputText = $scope.input[index].Value[0];
-            else
-                loadData()
     ,yes
     $scope.$watch 'form', ->
         # remove superfluous input

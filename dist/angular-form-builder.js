@@ -127,23 +127,22 @@
     }
   ]).controller('fbFormController', [
     '$scope', '$injector', function($scope, $injector) {
-      var $builder, $timeout, loadData;
+      var $builder, $timeout;
       $builder = $injector.get('$builder');
       $timeout = $injector.get('$timeout');
       if ($scope.input == null) {
         $scope.input = [];
       }
-      loadData = $scope.$watch('input', function() {
+      $scope.$watch('input', function() {
         var index, _i, _ref, _results;
         if ($scope.input.length > 0) {
-          if (!($scope.input[0].IdNumber === "")) {
+          console.log($scope.input);
+          if ($scope.input[0].insert) {
             _results = [];
             for (index = _i = 0, _ref = $scope.input.length; _i < _ref; index = _i += 1) {
               _results.push($scope.form[index].inputText = $scope.input[index].Value[0]);
             }
             return _results;
-          } else {
-            return loadData();
           }
         }
       }, true);
