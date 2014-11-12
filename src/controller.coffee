@@ -114,16 +114,13 @@ angular.module 'builder.controller', ['builder.provider']
     $builder = $injector.get '$builder'
     $timeout = $injector.get '$timeout'
 
-    # set default for input
-    $scope.input ?= []
-
-    $scope.$watch 'input', ->
-        if $scope.input.length > 0
-            console.log $scope.input
-            if $scope.input[0].insert
-                for index in [0...$scope.input.length] by 1
-                    $scope.form[index].inputText = $scope.input[index].Value[0];
-    ,yes
+    $scope.input ?= []    
+    $scope.$watch 'default', ->
+        # ! use $timeout for waiting $scope updated.
+        console.log 'default ctrl change',$scope
+        $timeout ->
+            $scope.$broadcast $builder.broadcastChannel.dynamicUpdate
+    , yes    
     $scope.$watch 'form', ->
         # remove superfluous input
         if $scope.input.length > $scope.form.length

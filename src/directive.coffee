@@ -332,7 +332,6 @@ angular.module 'builder.directive', [
     link: (scope, element, attrs) ->
         # providers
         $builder = $injector.get '$builder'
-
         # get the form for controller
         $builder.forms[scope.formName] ?= []
         scope.form = $builder.forms[scope.formName]
@@ -360,7 +359,12 @@ angular.module 'builder.directive', [
         # scope
         # ----------------------------------------
         # listen (formObject updated
-        scope.$on $builder.broadcastChannel.updateInput, -> scope.updateInput scope.inputText
+        scope.$on $builder.broadcastChannel.updateInput, -> 
+            # if not scope.$component.ArrayToText && angular.isArray(scope.inputText)
+            #     scope.inputText = scope.inputText[0]
+            # if scope.$component.ArrayToText
+            #     scope.default.
+            scope.updateInput scope.inputText
         if scope.$component.ArrayToText
             scope.inputArray = []
             # watch (end-user updated input of the form
@@ -381,14 +385,16 @@ angular.module 'builder.directive', [
                 else
                     scope.inputText = ""
             , yes
-        # else
-        #     scope.$parent.$watch "input[#{scope.$index}].Value", (newValue, oldValue) ->
-        #         return if newValue is oldValue
-        #         if angular.isArray(newValue)
-        #             scope.inputText = newValue[0]
-        #         else
-        #             scope.inputText = newValue
-        #     , yes
+        else
+            # scope.$parent.$watch "input[#{scope.$index}].Value", (newValue, oldValue) ->
+            #     return if newValue is oldValue
+            #     if angular.isArray(newValue)
+            #         scope.inputText = newValue[0]
+            #     else
+            #         scope.inputText = newValue
+            # , yes
+           
+
         scope.$watch 'inputText', (value) -> 
             scope.updateInput [value]
         # scope.$watch 'inputText', -> scope.updateInput scope.inputText
@@ -413,10 +419,31 @@ angular.module 'builder.directive', [
             scope.inputText = [scope.formObject.Options[0]]
 
         # set default value
-        scope.$watch "default[#{scope.formObject.IdNumber}]", (value) ->
+        scope.$parent.$watch "default[#{scope.formObject.IdNumber}]", (value, oldValue) ->
+            console.log 'default watch',scope.$parent
             return if not value
             if scope.$component.ArrayToText
                 scope.inputArray = value
             else
                 scope.inputText = value
+        ,yes       
+
+        # load data input
+        scope.$on $builder.broadcastChannel.dynamicUpdate, ->
+            console.log 'dynamicUpdate',scope.$parent.default[scope.formObject.IdNumber]
+            value = scope.$parent.default[scope.formObject.IdNumber]
+
+            if not value 
+                return
+            if scope.$component.ArrayToText
+                arr = [] 
+                for index in [0...scope.Options.length] by 1
+                    arr[index] = false;
+                    for j in [0...value.length]
+                        if scope.Options[index] is value[j]
+                            arr[index] = true
+                console.log arr
+                scope.inputArray = arr
+            else
+                scope.inputText = value[0]
 ]

@@ -29,6 +29,7 @@ angular.module 'builder.provider', []
     @groups = []
     @broadcastChannel =
         updateInput: '$updateInput'
+        dynamicUpdate :'$dynamicUpdate'
 
     # forms
     #   builder mode: `fb-builder` you could drag and drop to build the form.

@@ -133,18 +133,11 @@
       if ($scope.input == null) {
         $scope.input = [];
       }
-      $scope.$watch('input', function() {
-        var index, _i, _ref, _results;
-        if ($scope.input.length > 0) {
-          console.log($scope.input);
-          if ($scope.input[0].insert) {
-            _results = [];
-            for (index = _i = 0, _ref = $scope.input.length; _i < _ref; index = _i += 1) {
-              _results.push($scope.form[index].inputText = $scope.input[index].Value[0]);
-            }
-            return _results;
-          }
-        }
+      $scope.$watch('default', function() {
+        console.log('default ctrl change', $scope);
+        return $timeout(function() {
+          return $scope.$broadcast($builder.broadcastChannel.dynamicUpdate);
+        });
       }, true);
       return $scope.$watch('form', function() {
         if ($scope.input.length > $scope.form.length) {
@@ -539,6 +532,8 @@
                 return scope.inputText = "";
               }
             }, true);
+          } else {
+
           }
           scope.$watch('inputText', function(value) {
             return scope.updateInput([value]);
@@ -562,7 +557,8 @@
           if (!scope.$component.ArrayToText && scope.formObject.Options.length > 0) {
             scope.inputText = [scope.formObject.Options[0]];
           }
-          return scope.$watch("default[" + scope.formObject.IdNumber + "]", function(value) {
+          scope.$parent.$watch("default[" + scope.formObject.IdNumber + "]", function(value, oldValue) {
+            console.log('default watch', scope.$parent);
             if (!value) {
               return;
             }
@@ -570,6 +566,29 @@
               return scope.inputArray = value;
             } else {
               return scope.inputText = value;
+            }
+          }, true);
+          return scope.$on($builder.broadcastChannel.dynamicUpdate, function() {
+            var arr, index, j, value, _i, _j, _ref, _ref1;
+            console.log('dynamicUpdate', scope.$parent["default"][scope.formObject.IdNumber]);
+            value = scope.$parent["default"][scope.formObject.IdNumber];
+            if (!value) {
+              return;
+            }
+            if (scope.$component.ArrayToText) {
+              arr = [];
+              for (index = _i = 0, _ref = scope.Options.length; _i < _ref; index = _i += 1) {
+                arr[index] = false;
+                for (j = _j = 0, _ref1 = value.length; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
+                  if (scope.Options[index] === value[j]) {
+                    arr[index] = true;
+                  }
+                }
+              }
+              console.log(arr);
+              return scope.inputArray = arr;
+            } else {
+              return scope.inputText = value[0];
             }
           });
         }
@@ -1034,7 +1053,8 @@
     this.components = {};
     this.groups = [];
     this.broadcastChannel = {
-      updateInput: '$updateInput'
+      updateInput: '$updateInput',
+      dynamicUpdate: '$dynamicUpdate'
     };
     this.forms = {
       "default": []
