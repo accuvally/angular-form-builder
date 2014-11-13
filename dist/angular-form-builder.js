@@ -159,7 +159,7 @@
         input = {
           IdNumber: $scope.formObject.IdNumber,
           Label: $scope.formObject.Label,
-          Value: value != null ? value : ''
+          Value: value != null ? value : []
         };
         return $scope.$parent.input.splice($scope.$index, 1, input);
       };
@@ -244,7 +244,7 @@
               return $(element).find('.empty').remove();
             },
             up: function(e, isHover, draggable) {
-              var formObject, index, newIndex, oldIndex;
+              var formObject, index, insertIndex, newIndex, oldIndex;
               beginMove = true;
               if (!$drag.isMouseMoved()) {
                 $(element).find('.empty').remove();
@@ -259,9 +259,13 @@
                 if (draggable.mode === 'mirror') {
                   index = $(element).find('.empty').index('.fb-form-object-editable');
                   if (index >= 0) {
-                    $builder.insertFormObject(scope.formName, $(element).find('.empty').index('.fb-form-object-editable'), {
+                    insertIndex = $(element).find('.empty').index('.fb-form-object-editable');
+                    $builder.insertFormObject(scope.formName, insertIndex, {
                       Component: draggable.object.componentName
                     });
+                    if ($builder.components[draggable.object.componentName]['InsertCallback']) {
+                      $builder.components[draggable.object.componentName]['InsertCallback'](insertIndex);
+                    }
                   }
                 }
                 if (draggable.mode === 'drag') {
@@ -507,21 +511,21 @@
           if (scope.$component.ArrayToText) {
             scope.inputArray = [];
             scope.$watch('inputArray', function(newValue, oldValue) {
-              var checked, index;
+              var checked, index, _ref;
               if (newValue === oldValue) {
                 return;
               }
               checked = [];
               for (index in scope.inputArray) {
                 if (scope.inputArray[index]) {
-                  checked.push(scope.Options[index]);
+                  checked.push((_ref = scope.Options[index]) != null ? _ref : scope.inputArray[index]);
                 }
               }
               return scope.updateInput(checked);
             }, true);
             scope.$parent.$watch("input[" + scope.$index + "].Value", function(value) {
               var index, optionsLength, _i, _ref, _results;
-              if (value) {
+              if (value.length > 0) {
                 if (value.length === 1 && value[0]) {
                   scope.inputText = value[0];
                 }
@@ -531,6 +535,8 @@
                   _results.push(scope.inputArray[index] = (_ref = scope.Options[index], __indexOf.call(value, _ref) >= 0));
                 }
                 return _results;
+              } else {
+                return scope.inputText = "";
               }
             }, true);
           } else {
@@ -538,8 +544,10 @@
               if (newValue === oldValue) {
                 return;
               }
-              if (newValue && newValue[0]) {
+              if (angular.isArray(newValue)) {
                 return scope.inputText = newValue[0];
+              } else {
+                return scope.inputText = newValue;
               }
             }, true);
           }
@@ -563,7 +571,7 @@
             return $(element).html(view);
           });
           if (!scope.$component.ArrayToText && scope.formObject.Options.length > 0) {
-            scope.inputText = scope.formObject.Options[0];
+            scope.inputText = [scope.formObject.Options[0]];
           }
           return scope.$watch("default[" + scope.formObject.IdNumber + "]", function(value) {
             if (!value) {
@@ -1066,7 +1074,7 @@
       }
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var result, _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         Name: name,
         Group: (_ref = component.group) != null ? _ref : 'Default',
@@ -1082,7 +1090,8 @@
         Template: component.template,
         TemplateUrl: component.templateUrl,
         PopoverTemplate: component.popoverTemplate,
-        PopoverTemplateUrl: component.popoverTemplateUrl
+        PopoverTemplateUrl: component.popoverTemplateUrl,
+        InsertCallback: (_ref10 = component.insertCallback) != null ? _ref10 : void 0
       };
       if (!result.Template && !result.TemplateUrl) {
         console.error("The template is empty.");
@@ -1093,7 +1102,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (formObject == null) {
         formObject = {};
       }
@@ -1125,7 +1134,8 @@
         Placeholder: (_ref5 = formObject.Placeholder) != null ? _ref5 : component.Placeholder,
         Options: (_ref6 = formObject.Options) != null ? _ref6 : component.Options,
         Required: (_ref7 = formObject.Required) != null ? _ref7 : component.Required,
-        Validation: (_ref8 = formObject.Validation) != null ? _ref8 : component.Validation
+        Validation: (_ref8 = formObject.Validation) != null ? _ref8 : component.Validation,
+        InsertCallback: (_ref9 = formObject.InsertCallback) != null ? _ref9 : component.InsertCallback
       };
       return result;
     };

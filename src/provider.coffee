@@ -70,6 +70,7 @@ angular.module 'builder.provider', []
             TemplateUrl: component.templateUrl
             PopoverTemplate: component.popoverTemplate
             PopoverTemplateUrl: component.popoverTemplateUrl
+            InsertCallback: component.insertCallback ? undefined
 
         if not result.Template and not result.TemplateUrl
             console.error "The template is empty."
@@ -106,6 +107,7 @@ angular.module 'builder.provider', []
             Options: formObject.Options ? component.Options
             Required: formObject.Required ? component.Required
             Validation: formObject.Validation ? component.Validation
+            InsertCallback: formObject.InsertCallback ? component.InsertCallback
         result
 
     @reindexFormObject = (name) =>

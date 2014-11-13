@@ -105,8 +105,10 @@ angular.module 'builder.directive', [
                         # insert a form object
                         index = $(element).find('.empty').index('.fb-form-object-editable')
                         if index >= 0
-                            $builder.insertFormObject scope.formName, $(element).find('.empty').index('.fb-form-object-editable'),
+                            insertIndex = $(element).find('.empty').index('.fb-form-object-editable')
+                            $builder.insertFormObject scope.formName, insertIndex,
                                 Component: draggable.object.componentName
+                            if $builder.components[draggable.object.componentName]['InsertCallback'] then $builder.components[draggable.object.componentName]['InsertCallback'](insertIndex)
                     if draggable.mode is 'drag'
                         # update the index of form objects
                         oldIndex = draggable.object.formObject.OrderBy
@@ -367,22 +369,26 @@ angular.module 'builder.directive', [
                 return if newValue is oldValue
                 checked = []
                 for index of scope.inputArray when scope.inputArray[index]
-                    checked.push scope.Options[index]
+                    checked.push scope.Options[index] ? scope.inputArray[index]
                 scope.updateInput checked
                 # scope.inputText = checked.join ','
             , yes
             scope.$parent.$watch "input[#{scope.$index}].Value", (value) ->
-                if value
+                if value.length > 0
                     scope.inputText = value[0] if value.length is 1 and value[0]
                     optionsLength = if scope.Options then scope.Options.length else 0
                     for index in [0...optionsLength] by 1
                       scope.inputArray[index] = scope.Options[index] in value
+                else
+                    scope.inputText = ""
             , yes
         else
             scope.$parent.$watch "input[#{scope.$index}].Value", (newValue, oldValue) ->
                 return if newValue is oldValue
-                if newValue and newValue[0]
+                if angular.isArray(newValue)
                     scope.inputText = newValue[0]
+                else
+                    scope.inputText = newValue
             , yes
         scope.$watch 'inputText', (value) -> scope.updateInput [value]
         # scope.$watch 'inputText', -> scope.updateInput scope.inputText
@@ -404,7 +410,7 @@ angular.module 'builder.directive', [
 
         # select the first option
         if not scope.$component.ArrayToText and scope.formObject.Options.length > 0
-            scope.inputText = scope.formObject.Options[0]
+            scope.inputText = [scope.formObject.Options[0]]
 
         # set default value
         scope.$watch "default[#{scope.formObject.IdNumber}]", (value) ->
