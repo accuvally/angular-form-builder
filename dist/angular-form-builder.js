@@ -511,13 +511,15 @@
           if (scope.$component.ArrayToText) {
             scope.inputArray = [];
             scope.$watch('inputArray', function(newValue, oldValue) {
-              var checked, index, _i, _ref, _ref1;
+              var checked, index, _i, _ref;
               if (newValue === oldValue) {
                 return;
               }
               checked = [];
               for (index = _i = 0, _ref = scope.inputArray.length; _i < _ref; index = _i += 1) {
-                checked.push((_ref1 = scope.Options[index]) != null ? _ref1 : scope.inputArray[index]);
+                if (scope.inputArray[index]) {
+                  checked.push(scope.Options[index]);
+                }
               }
               return scope.updateInput(checked);
             }, true);

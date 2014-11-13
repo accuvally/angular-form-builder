@@ -369,7 +369,7 @@ angular.module 'builder.directive', [
                 return if newValue is oldValue
                 checked = []
                 for index in [0...scope.inputArray.length] by 1
-                    checked.push scope.Options[index] ? scope.inputArray[index]
+                    checked.push scope.Options[index] if scope.inputArray[index]
                 scope.updateInput checked
                 # scope.inputText = checked.join ','
             , yes
