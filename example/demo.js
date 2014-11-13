@@ -32,6 +32,7 @@
       textbox = $builder.addFormObject('default', {
         component: 'textInput',
         label: 'Name',
+        IdNumber: '12345678',
         description: 'Your name',
         placeholder: 'Your name',
         required: true,
@@ -40,12 +41,14 @@
       checkbox = $builder.addFormObject('default', {
         component: 'checkbox',
         label: 'Pets',
+        IdNumber: '1234r5t36',
         description: 'Do you have any pets?',
         options: ['Dog', 'Cat']
       });
       $builder.addFormObject('default', {
         component: 'sampleInput'
       });
+      $scope.refresh = true;
       $scope.form = $builder.forms['default'];
       $scope.input = [];
       $scope.defaultValue = {};

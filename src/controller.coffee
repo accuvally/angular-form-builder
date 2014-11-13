@@ -121,6 +121,7 @@ angular.module 'builder.controller', ['builder.provider']
     #     # $timeout ->
     #     #     $scope.$broadcast $builder.broadcastChannel.dynamicUpdate
     # , yes    
+    console.log 'default',$scope.default
     $scope.$watch 'form', ->
         # remove superfluous input
         if $scope.input.length > $scope.form.length

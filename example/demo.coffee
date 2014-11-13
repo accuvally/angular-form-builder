@@ -24,6 +24,7 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
     textbox = $builder.addFormObject 'default',
         component: 'textInput'
         label: 'Name'
+        IdNumber: '12345678'
         description: 'Your name'
         placeholder: 'Your name'
         required: yes
@@ -31,10 +32,12 @@ angular.module 'app', ['builder', 'builder.components', 'validator.rules']
     checkbox = $builder.addFormObject 'default',
         component: 'checkbox'
         label: 'Pets'
+        IdNumber: '1234r5t36'
         description: 'Do you have any pets?'
         options: ['Dog', 'Cat']
     $builder.addFormObject 'default',
         component: 'sampleInput'
+    $scope.refresh = true
     # formObjects
     $scope.form = $builder.forms['default']
 

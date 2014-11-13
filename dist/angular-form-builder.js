@@ -133,6 +133,7 @@
       if ($scope.input == null) {
         $scope.input = [];
       }
+      console.log('default', $scope["default"]);
       return $scope.$watch('form', function() {
         if ($scope.input.length > $scope.form.length) {
           $scope.input.splice($scope.form.length);
@@ -477,17 +478,31 @@
         scope: {
           formName: '@fbForm',
           input: '=ngModel',
-          "default": '=fbDefault'
+          "default": '=fbDefault',
+          needReload: '=fbReload'
         },
-        template: "<div class='fb-form-object' ng-repeat=\"object in form\" fb-form-object=\"object\"></div>",
         controller: 'fbFormController',
         link: function(scope, element, attrs) {
-          var $builder, _base, _name;
+          var $builder, $compile, count, template, _base, _name;
           $builder = $injector.get('$builder');
+          $compile = $injector.get('$compile');
           if ((_base = $builder.forms)[_name = scope.formName] == null) {
             _base[_name] = [];
           }
-          return scope.form = $builder.forms[scope.formName];
+          scope.form = $builder.forms[scope.formName];
+          count = 0;
+          template = "<div class='fb-form-object' ng-repeat=\"object in form\" fb-form-object=\"object\"></div>";
+          console.log(scope.needReload);
+          if (angular.isDefined(scope.needReload)) {
+            return scope.$watch('needReload', function(val) {
+              console.log('reload', val);
+              if (val) {
+                element.html(template);
+                $compile(element.contents())(scope);
+                return scope.needReload = false;
+              }
+            });
+          }
         }
       };
     }

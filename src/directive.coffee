@@ -324,17 +324,42 @@ angular.module 'builder.directive', [
         formName: '@fbForm'
         input: '=ngModel'
         default: '=fbDefault'
-    template:
-        """
-        <div class='fb-form-object' ng-repeat="object in form" fb-form-object="object"></div>
-        """
+        needReload : '=fbReload'
+    # template:
+    #     """
+    #     <div class='fb-form-object' ng-repeat="object in form" fb-form-object="object"></div>
+    #     """
     controller: 'fbFormController'
+    # compile: (element,attrs) ->
+    #     var html = element.html()
+
+
     link: (scope, element, attrs) ->
         # providers
         $builder = $injector.get '$builder'
+        $compile = $injector.get '$compile'
         # get the form for controller
         $builder.forms[scope.formName] ?= []
         scope.form = $builder.forms[scope.formName]
+        count = 0
+        template = 
+            """
+            <div class='fb-form-object' ng-repeat="object in form" fb-form-object="object"></div>
+            """
+        
+        # if you want to refresh template, you need to give fbReload value first. 
+        # If you do not give fbReload value, the trigger will not work and you can not fresh fbForm dynamically
+        console.log scope.needReload
+        if angular.isDefined scope.needReload
+            scope.$watch 'needReload', (val) ->
+                console.log 'reload',val
+                if val
+                    element.html template
+                    $compile(element.contents())(scope)
+                    scope.needReload = false
+        
+        
+
 ]
 
 # ----------------------------------------
