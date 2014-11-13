@@ -418,23 +418,11 @@ angular.module 'builder.directive', [
         if not scope.$component.ArrayToText and scope.formObject.Options.length > 0
             scope.inputText = [scope.formObject.Options[0]]
 
-        # set default value
-        scope.$parent.$watch "default[#{scope.formObject.IdNumber}]", (value, oldValue) ->
-            console.log 'default watch',scope.$parent
+        # set default value 
+        # 141113 add '' for fixing js large number issue
+        scope.$parent.$watch "default['#{scope.formObject.IdNumber}']", (value, oldValue) ->
+            # console.log 'default watch',scope.$parent
             return if not value
-            if scope.$component.ArrayToText
-                scope.inputArray = value
-            else
-                scope.inputText = value
-        ,yes       
-
-        # load data input
-        scope.$on $builder.broadcastChannel.dynamicUpdate, ->
-            console.log 'dynamicUpdate',scope.$parent.default[scope.formObject.IdNumber]
-            value = scope.$parent.default[scope.formObject.IdNumber]
-
-            if not value 
-                return
             if scope.$component.ArrayToText
                 arr = [] 
                 for index in [0...scope.Options.length] by 1
@@ -442,8 +430,28 @@ angular.module 'builder.directive', [
                     for j in [0...value.length]
                         if scope.Options[index] is value[j]
                             arr[index] = true
-                console.log arr
+                # console.log arr
                 scope.inputArray = arr
             else
-                scope.inputText = value[0]
+                scope.inputText = value
+        ,yes       
+
+        # load data input
+        # scope.$on $builder.broadcastChannel.dynamicUpdate, ->
+        #     console.log 'dynamicUpdate',scope.$parent.default[scope.formObject.IdNumber]
+        #     value = scope.$parent.default[scope.formObject.IdNumber]
+
+        #     if not value 
+        #         return
+        #     if scope.$component.ArrayToText
+        #         arr = [] 
+        #         for index in [0...scope.Options.length] by 1
+        #             arr[index] = false;
+        #             for j in [0...value.length]
+        #                 if scope.Options[index] is value[j]
+        #                     arr[index] = true
+        #         console.log arr
+        #         scope.inputArray = arr
+        #     else
+        #         scope.inputText = value[0]
 ]

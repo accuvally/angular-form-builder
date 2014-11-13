@@ -133,12 +133,6 @@
       if ($scope.input == null) {
         $scope.input = [];
       }
-      $scope.$watch('default', function() {
-        console.log('default ctrl change', $scope);
-        return $timeout(function() {
-          return $scope.$broadcast($builder.broadcastChannel.dynamicUpdate);
-        });
-      }, true);
       return $scope.$watch('form', function() {
         if ($scope.input.length > $scope.form.length) {
           $scope.input.splice($scope.form.length);
@@ -557,21 +551,8 @@
           if (!scope.$component.ArrayToText && scope.formObject.Options.length > 0) {
             scope.inputText = [scope.formObject.Options[0]];
           }
-          scope.$parent.$watch("default[" + scope.formObject.IdNumber + "]", function(value, oldValue) {
-            console.log('default watch', scope.$parent);
-            if (!value) {
-              return;
-            }
-            if (scope.$component.ArrayToText) {
-              return scope.inputArray = value;
-            } else {
-              return scope.inputText = value;
-            }
-          }, true);
-          return scope.$on($builder.broadcastChannel.dynamicUpdate, function() {
-            var arr, index, j, value, _i, _j, _ref, _ref1;
-            console.log('dynamicUpdate', scope.$parent["default"][scope.formObject.IdNumber]);
-            value = scope.$parent["default"][scope.formObject.IdNumber];
+          return scope.$parent.$watch("default['" + scope.formObject.IdNumber + "']", function(value, oldValue) {
+            var arr, index, j, _i, _j, _ref, _ref1;
             if (!value) {
               return;
             }
@@ -585,12 +566,11 @@
                   }
                 }
               }
-              console.log(arr);
               return scope.inputArray = arr;
             } else {
-              return scope.inputText = value[0];
+              return scope.inputText = value;
             }
-          });
+          }, true);
         }
       };
     }
