@@ -368,7 +368,7 @@ angular.module 'builder.directive', [
                 # array input, like checkbox
                 return if newValue is oldValue
                 checked = []
-                for index of scope.inputArray when scope.inputArray[index]
+                for index in [0...scope.inputArray.length] by 1
                     checked.push scope.Options[index] ? scope.inputArray[index]
                 scope.updateInput checked
                 # scope.inputText = checked.join ','
