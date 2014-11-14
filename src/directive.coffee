@@ -427,7 +427,9 @@ angular.module 'builder.directive', [
 
         scope.$watch 'inputText', (value) -> 
             # console.log 'inputText refresh',value
-            scope.updateInput [value]
+            if not angular.isArray value
+                value = [value]
+            scope.updateInput value
         # scope.$watch 'inputText', -> scope.updateInput scope.inputText
         # watch (management updated form objects
         scope.$watch attrs.fbFormObject, ->

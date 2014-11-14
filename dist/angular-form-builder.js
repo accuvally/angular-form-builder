@@ -549,7 +549,10 @@
 
           }
           scope.$watch('inputText', function(value) {
-            return scope.updateInput([value]);
+            if (!angular.isArray(value)) {
+              value = [value];
+            }
+            return scope.updateInput(value);
           });
           scope.$watch(attrs.fbFormObject, function() {
             return scope.copyObjectToScope(scope.formObject);
