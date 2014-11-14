@@ -349,10 +349,10 @@ angular.module 'builder.directive', [
         
         # if you want to refresh template, you need to give fbReload value first. 
         # If you do not give fbReload value, the trigger will not work and you can not fresh fbForm dynamically
-        console.log scope.needReload
+        # console.log 'needReload:',scope.needReload
         if angular.isDefined scope.needReload
             scope.$watch 'needReload', (val) ->
-                console.log 'reload',val
+                # console.log 'reload',val
                 if val
                     element.html template
                     $compile(element.contents())(scope)
@@ -385,10 +385,7 @@ angular.module 'builder.directive', [
         # ----------------------------------------
         # listen (formObject updated
         scope.$on $builder.broadcastChannel.updateInput, -> 
-            # if not scope.$component.ArrayToText && angular.isArray(scope.inputText)
-            #     scope.inputText = scope.inputText[0]
-            # if scope.$component.ArrayToText
-            #     scope.default.
+            # console.log 'fbformobj broadcast:',scope.inputText
             scope.updateInput scope.inputText
         if scope.$component.ArrayToText
             scope.inputArray = []
@@ -397,9 +394,10 @@ angular.module 'builder.directive', [
                 # array input, like checkbox
                 return if newValue is oldValue
                 checked = []
+                # console.log 'inputArray:',newValue
                 # console.log scope
                 for index in [0...scope.inputArray.length] by 1
-                    checked.push scope.Options[index] ? scope.inputArray[index]
+                    checked.push scope.Options[index] if scope.inputArray[index]
                 scope.updateInput checked
                 # scope.inputText = checked.join ','
                 if checked.length > 0
@@ -421,6 +419,7 @@ angular.module 'builder.directive', [
            
 
         scope.$watch 'inputText', (value) -> 
+            # console.log 'inputText refresh',value
             scope.updateInput [value]
         # scope.$watch 'inputText', -> scope.updateInput scope.inputText
         # watch (management updated form objects

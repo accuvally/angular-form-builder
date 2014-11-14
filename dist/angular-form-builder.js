@@ -492,10 +492,8 @@
           scope.form = $builder.forms[scope.formName];
           count = 0;
           template = "<div class='fb-form-object' ng-repeat=\"object in form\" fb-form-object=\"object\"></div>";
-          console.log(scope.needReload);
           if (angular.isDefined(scope.needReload)) {
             return scope.$watch('needReload', function(val) {
-              console.log('reload', val);
               if (val) {
                 element.html(template);
                 $compile(element.contents())(scope);
@@ -524,13 +522,15 @@
           if (scope.$component.ArrayToText) {
             scope.inputArray = [];
             scope.$watch('inputArray', function(newValue, oldValue) {
-              var checked, index, _i, _ref, _ref1;
+              var checked, index, _i, _ref;
               if (newValue === oldValue) {
                 return;
               }
               checked = [];
               for (index = _i = 0, _ref = scope.inputArray.length; _i < _ref; index = _i += 1) {
-                checked.push((_ref1 = scope.Options[index]) != null ? _ref1 : scope.inputArray[index]);
+                if (scope.inputArray[index]) {
+                  checked.push(scope.Options[index]);
+                }
               }
               scope.updateInput(checked);
               if (checked.length > 0) {
