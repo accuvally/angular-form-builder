@@ -500,6 +500,9 @@
                 return scope.needReload = false;
               }
             });
+          } else {
+            element.html(template);
+            return $compile(element.contents())(scope);
           }
         }
       };

@@ -357,7 +357,9 @@ angular.module 'builder.directive', [
                     element.html template
                     $compile(element.contents())(scope)
                     scope.needReload = false
-        
+        else
+            element.html template
+            $compile(element.contents())(scope)
         
 
 ]
