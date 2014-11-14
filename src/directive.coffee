@@ -394,14 +394,19 @@ angular.module 'builder.directive', [
                 # array input, like checkbox
                 return if newValue is oldValue
                 checked = []
-                # console.log 'inputArray:',newValue
+                
                 # console.log scope
                 for index in [0...scope.inputArray.length] by 1
                     checked.push scope.Options[index] if scope.inputArray[index]
-                scope.updateInput checked
+                # scope.inputText = checked
+                # scope.updateInput checked
+                # console.log 'inputArray:',newValue,checked
                 # scope.inputText = checked.join ','
                 if checked.length > 0
-                    scope.inputText = checked[0] if checked.length is 1 and checked[0]
+                    if checked.length is 1 and checked[0]
+                        scope.inputText = checked[0]
+                    else
+                        scope.inputText = checked
                     # optionsLength = if scope.Options then scope.Options.length else 0
                     # for index in [0...optionsLength] by 1
                     #   scope.inputArray[index] = scope.Options[index] in value
@@ -457,7 +462,7 @@ angular.module 'builder.directive', [
                 # console.log arr
                 scope.inputArray = arr
             else
-                scope.inputText = value
+                scope.inputText = value[0]
         ,yes       
 
         # load data input

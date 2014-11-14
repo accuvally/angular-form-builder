@@ -532,10 +532,11 @@
                   checked.push(scope.Options[index]);
                 }
               }
-              scope.updateInput(checked);
               if (checked.length > 0) {
                 if (checked.length === 1 && checked[0]) {
                   return scope.inputText = checked[0];
+                } else {
+                  return scope.inputText = checked;
                 }
               } else {
                 return scope.inputText = "";
@@ -583,7 +584,7 @@
               }
               return scope.inputArray = arr;
             } else {
-              return scope.inputText = value;
+              return scope.inputText = value[0];
             }
           }, true);
         }
