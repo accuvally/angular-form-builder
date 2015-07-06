@@ -237,7 +237,7 @@ angular.module 'builder.provider', []
         @param oldIndex: The old index.
         @param newIndex: The new index.
         ###
-        return if oldIndex is newIndex
+        return if oldIndex is newIndex or newIndex is -1
         formObjects = @forms[name]
         formObject = formObjects.splice(oldIndex, 1)[0]
         formObjects.splice newIndex, 0, formObject

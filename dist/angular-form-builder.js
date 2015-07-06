@@ -1320,7 +1320,7 @@
         @param newIndex: The new index.
          */
         var formObject, formObjects;
-        if (oldIndex === newIndex) {
+        if (oldIndex === newIndex || newIndex === -1) {
           return;
         }
         formObjects = _this.forms[name];
